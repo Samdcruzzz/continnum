@@ -1,0 +1,72 @@
+# Gericure Demo - Python Dependencies
+#
+# Install with: pip install -r requirements.txt
+# Create venv first: python -m venv venv && source venv/bin/activate
+
+# ============ CORE FRAMEWORK ============
+
+fastapi==0.104.1           # FastAPI web framework
+uvicorn[standard]==0.24.0  # ASGI server for FastAPI
+
+# ============ DATABASE ============
+
+sqlalchemy==2.0.23         # ORM and database toolkit
+psycopg2-binary==2.9.9     # PostgreSQL driver for Python
+                           # Note: Use 'psycopg2' instead if compiling from source
+
+# ============ DATA VALIDATION ============
+
+pydantic==2.5.0           # Data validation and serialization
+pydantic[email]==2.5.0    # Email validation support (for EmailStr)
+email-validator==2.1.0    # Email validation library
+
+# ============ CONFIGURATION ============
+
+python-dotenv==1.0.0      # Load .env files into os.environ
+
+# ============ DEVELOPMENT ============
+
+pytest==7.4.3             # Testing framework
+pytest-asyncio==0.21.1    # AsyncIO support for pytest
+black==23.12.0            # Code formatter
+flake8==6.1.0             # Code linter
+mypy==1.7.1               # Static type checker
+
+# ============ OPTIONAL: PRODUCTION ============
+
+# Uncomment for production deployments:
+# gunicorn==21.2.0          # Production WSGI server (use with uvicorn workers)
+# python-json-logger==2.0.7 # JSON logging for production
+# sentry-sdk==1.39.1        # Error tracking (Sentry)
+
+# ============ NOTES ============
+
+# Development Setup:
+#   1. python -m venv venv
+#   2. source venv/bin/activate  (or: venv\Scripts\activate on Windows)
+#   3. pip install --upgrade pip setuptools wheel
+#   4. pip install -r requirements.txt
+#
+# Test Installation:
+#   python -c "import fastapi; import sqlalchemy; print('OK')"
+#
+# Running the App:
+#   python main.py
+#
+# Or with uvicorn directly:
+#   uvicorn main:app --reload
+#
+# Or with gunicorn + uvicorn workers (production):
+#   gunicorn -w 4 -k uvicorn.workers.UvicornWorker main:app
+#
+# Database Setup:
+#   Before first run, ensure PostgreSQL is running and create database:
+#   createdb gericure_demo
+#   Or: psql -c "CREATE DATABASE gericure_demo;"
+#
+# Seed Demo Data:
+#   python seed_demo.py
+#
+# View API Documentation:
+#   http://localhost:8000/docs (Swagger UI)
+#   http://localhost:8000/redoc (ReDoc)
