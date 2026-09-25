@@ -1,0 +1,302 @@
+================================================================================
+P0 IMPLEMENTATION CHECKLIST - Print This Out
+================================================================================
+
+PROJECT: AI Health Memory Demo (SIH 2026)
+MILESTONE: P0 Backend Implementation
+DURATION: ~30-60 minutes
+DATE: _______________
+
+================================================================================
+PRE-IMPLEMENTATION
+================================================================================
+
+☐ Downloaded all 11 files from P0_Handoff.zip
+☐ Extracted to project directory
+☐ Read START_HERE.md (5 minutes)
+☐ Python 3.8+ installed
+☐ FastAPI project exists at: Gericure_demo/
+☐ PostgreSQL running (or SQLite configured)
+☐ Virtual environment activated
+
+Checkpoint: If any above is incomplete, STOP and fix before continuing.
+
+================================================================================
+PHASE 1: FILE INTEGRATION (5 minutes)
+================================================================================
+
+LOCATION: Gericure_demo/
+
+☐ Copy models.py
+  FROM: P0_Handoff/app/models.py
+  TO:   Gericure_demo/app/models.py
+  CHECK: File contains "change_note = Column(Text)" line 73
+
+☐ Copy schemas.py
+  FROM: P0_Handoff/app/schemas.py
+  TO:   Gericure_demo/app/schemas.py
+  CHECK: File contains "TimelineEventResponse" class
+
+☐ Copy patients.py
+  FROM: P0_Handoff/app/routers/patients.py
+  TO:   Gericure_demo/app/routers/patients.py
+  CHECK: File contains "def get_patient_timeline()" function
+
+☐ Copy consent_agent.py
+  FROM: P0_Handoff/app/ai_agents/consent_agent.py
+  TO:   Gericure_demo/app/ai_agents/consent_agent.py
+  CHECK: File contains "P0: CHECK EXPIRY DATE" comment
+
+☐ Copy records_adapter.py
+  FROM: P0_Handoff/app/ai_agents/records_adapter.py
+  TO:   Gericure_demo/app/ai_agents/records_adapter.py
+  CHECK: File contains "P0: NEW - traceability" comments
+
+☐ Copy seed_demo.py
+  FROM: P0_Handoff/seed_demo.py
+  TO:   Gericure_demo/seed_demo.py
+  CHECK: File contains "Nagarajan" patient name
+
+VERIFY:
+☐ Run: ls -l app/models.py app/schemas.py app/routers/patients.py
+       (All 3 files should exist and be recent)
+
+================================================================================
+PHASE 2: DATABASE VERIFICATION (5 minutes)
+================================================================================
+
+LOCATION: Gericure_demo/
+
+☐ Check existing DB connection
+  COMMAND: python test_db.py
+  EXPECTED OUTPUT: Database connection successful (or existing tables info)
+  RESULT: ________________
+
+☐ If new database, create tables
+  COMMAND: python -c "from app.database import engine; from app.models import Base; Base.metadata.create_all(bind=engine)"
+  EXPECTED: No errors
+  RESULT: ________________
+
+☐ Verify change_note column exists
+  COMMAND (PostgreSQL):
+    psql -c "SELECT column_name FROM information_schema.columns WHERE table_name='medicines';"
+  COMMAND (SQLite):
+    sqlite3 (db path).db ".schema medicines"
+  EXPECTED: change_note should appear in column list
+  RESULT: ________________
+
+CHECKPOINT: Database ready? [ YES / NO ]
+If NO, see README_P0_HANDOFF.md "Troubleshooting" section.
+
+================================================================================
+PHASE 3: APPLICATION STARTUP (5 minutes)
+================================================================================
+
+LOCATION: Gericure_demo/
+
+☐ Start FastAPI server
+  COMMAND: python main.py
+  EXPECTED OUTPUT: "Uvicorn running on http://0.0.0.0:8000"
+  
+  Wait 10 seconds for startup...
+
+☐ Verify Swagger UI loads
+  BROWSER: http://localhost:8000/docs
+  EXPECTED: Interactive API documentation visible
+  ✓ PASS / ✗ FAIL
+
+☐ Verify /patients endpoint exists
+  BROWSER: http://localhost:8000/docs#/patients
+  EXPECTED: See /patients/ and /patients/{patient_id} endpoints
+  ✓ PASS / ✗ FAIL
+
+☐ Verify /timeline endpoint exists (NEW - P0)
+  BROWSER: http://localhost:8000/docs#/patients
+  EXPECTED: See /patients/{patient_id}/timeline endpoint
+  ✓ PASS / ✗ FAIL
+
+Keep server running for Phase 4 & 5.
+
+================================================================================
+PHASE 4: DEMO DATA SEEDING (5 minutes)
+================================================================================
+
+LOCATION: Gericure_demo/ (new terminal window)
+
+☐ Activate same Python environment as main.py
+
+☐ Run seeding script
+  COMMAND: python seed_demo.py
+  EXPECTED OUTPUT:
+    ============================================================
+    P0 DEMO SEEDING: Patient Nagarajan Timeline
+    ============================================================
+    ✓ Patient created: Nagarajan (ID: 1)
+    ✓ Doctor created: Dr. Ramesh (ID: 1)
+    ✓ Event 1 (Sept 2024): Diabetes diagnosis + Metformin 500mg started
+    ✓ Event 2 (Jan 2025): Metformin increased to 750mg + caregiver observation
+    ✓ Event 3 (Apr 2025): Hypertension diagnosed + Amlodipine 5mg started
+    ✓ Event 4 (Aug 2025): Amlodipine reduced to 2.5mg + vitals improving
+    ✓ Event 5 (Sept 2026): Annual checkup - stable on current medications
+    ✓ Consent created: Doctor has access to diagnosis, medicines, follow-up, vitals
+
+RESULT: ________________
+  ✓ PASS / ✗ FAIL
+
+If FAIL, check logs. Most common: app.database import error.
+(See README_P0_HANDOFF.md for fixes)
+
+Checkpoint: Did seed_demo.py complete? [ YES / NO ]
+
+================================================================================
+PHASE 5: ENDPOINT TESTING (15 minutes)
+================================================================================
+
+LOCATION: Gericure_demo/ (terminal with curl OR Swagger UI)
+
+TEST 1: Patient Exists
+────────────────────────────────────────────────────────────────────────────
+☐ COMMAND:
+  curl http://localhost:8000/api/patients/1
+
+☐ EXPECTED RESPONSE:
+  {
+    "id": 1,
+    "first_name": "Nagarajan",
+    "last_name": "S.",
+    "email": "nagarajan.demo@example.com",
+    ...
+  }
+
+☐ RESULT: ✓ PASS / ✗ FAIL
+
+
+TEST 2: Timeline Has 5 Events (P0)
+────────────────────────────────────────────────────────────────────────────
+☐ COMMAND:
+  curl http://localhost:8000/api/patients/1/timeline | jq '.total_events'
+
+☐ EXPECTED RESPONSE:
+  5
+
+☐ RESULT: ✓ PASS / ✗ FAIL
+
+
+TEST 3: Timeline Chronologically Sorted (P0)
+────────────────────────────────────────────────────────────────────────────
+☐ COMMAND:
+  curl http://localhost:8000/api/patients/1/timeline | jq '.events[].date'
+
+☐ EXPECTED DATES (in order):
+  "2024-09-10"
+  "2025-01-15"
+  "2025-04-05"
+  "2025-08-12"
+  "2026-09-08"
+
+☐ RESULT: ✓ PASS / ✗ FAIL
+
+
+TEST 4: Medications Include change_note (P0)
+────────────────────────────────────────────────────────────────────────────
+☐ COMMAND:
+  curl http://localhost:8000/api/patients/1/medicines | jq '.[] | {medicine_name, dosage, change_note}'
+
+☐ EXPECTED RESPONSE (partial):
+  {
+    "medicine_name": "Metformin",
+    "dosage": "750mg",
+    "change_note": "Dosage increased from 500mg to 750mg due to suboptimal glycemic control..."
+  }
+  {
+    "medicine_name": "Amlodipine",
+    "dosage": "2.5mg",
+    "change_note": "Dosage reduced from 5mg to 2.5mg due to ankle edema side effects..."
+  }
+
+☐ RESULT: ✓ PASS / ✗ FAIL
+
+
+TEST 5: Consent Expiry Blocks Access (CRITICAL - P0)
+────────────────────────────────────────────────────────────────────────────
+Manual setup: Update DB to set consent expiry in the past
+
+☐ COMMAND (PostgreSQL):
+  UPDATE consents SET expiry_date = '2020-01-01' WHERE id = 1;
+
+☐ COMMAND (SQLite):
+  UPDATE consents SET expiry_date = '2020-01-01' WHERE id = 1;
+
+Then test AI insights endpoint:
+
+☐ COMMAND:
+  curl -X POST http://localhost:8000/api/ai/insights \
+    -H "Content-Type: application/json" \
+    -d '{"doctor_id": 1, "patient_id": 1, "query": "What medications is the patient on?"}'
+
+☐ EXPECTED RESPONSE:
+  {
+    "access_granted": false,
+    "message": "Access denied: consent expired on 2020-01-01. Doctor must request new consent."
+  }
+
+☐ RESULT: ✓ PASS / ✗ FAIL
+
+(Reset consent expiry if needed:
+ UPDATE consents SET expiry_date = '2027-09-08' WHERE id = 1;
+)
+
+================================================================================
+FINAL CHECKPOINT
+================================================================================
+
+Review your results:
+
+[ ] Phase 1 (Files): All 6 code files copied ✓
+[ ] Phase 2 (DB): change_note column exists ✓
+[ ] Phase 3 (App): Swagger UI loads, endpoints visible ✓
+[ ] Phase 4 (Seed): Nagarajan demo patient created ✓
+[ ] Phase 5 (Tests):
+    [ ] TEST 1: Patient exists ✓
+    [ ] TEST 2: Timeline has 5 events ✓
+    [ ] TEST 3: Timeline chronologically sorted ✓
+    [ ] TEST 4: Medications have change_note ✓
+    [ ] TEST 5: Consent expiry enforced ✓
+
+OVERALL RESULT: [ ✓ PASS / ✗ FAIL ]
+
+If any test failed, refer to README_P0_HANDOFF.md troubleshooting section.
+
+================================================================================
+SIGN-OFF
+================================================================================
+
+IMPLEMENTER: ________________________    DATE: ______________
+
+VERIFIED BY: ________________________    DATE: ______________
+
+NOTES:
+________________________________________________________________________
+________________________________________________________________________
+________________________________________________________________________
+
+================================================================================
+NEXT STEPS (P1)
+================================================================================
+
+✓ P0 backend is complete and tested.
+
+→ Ready for P1 (Frontend Integration):
+  - Timeline UI component (chronological event rendering)
+  - Medication change badges (highlight dosage changes)
+  - Consent status display (expiry date, allowed categories)
+  - AI response integration (display with record_id audit trail)
+
+→ Deploy to production with confidence:
+  - Privacy enforcement is now active
+  - Record traceability is in place
+  - Demo is judge-ready
+
+✓ P0 MILESTONE COMPLETE
+
+================================================================================

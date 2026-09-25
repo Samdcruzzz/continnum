@@ -1,0 +1,116 @@
+# Prometheus Configuration for Gericure (Phase 3)
+
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+  external_labels:
+    monitor: 'gericure-monitor'
+    environment: 'production'
+
+# Alerting configuration
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets: []
+
+# Rule files
+rule_files:
+  - '/etc/prometheus/rules/*.yml'
+
+# Scrape configurations
+scrape_configs:
+  # ============================================================================
+  # Prometheus itself
+  # ============================================================================
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+
+  # ============================================================================
+  # Gericure Application
+  # ============================================================================
+  - job_name: 'gericure-app'
+    scrape_interval: 5s
+    scrape_timeout: 5s
+    metrics_path: '/metrics'
+    scheme: 'http'
+    static_configs:
+      - targets: ['app:8000']
+        labels:
+          instance: 'gericure-app'
+          service: 'api'
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: instance
+
+  # ============================================================================
+  # PostgreSQL (node exporter)
+  # ============================================================================
+  - job_name: 'postgres'
+    static_configs:
+      - targets: ['postgres:5432']
+        labels:
+          instance: 'gericure-postgres'
+          service: 'database'
+
+  # ============================================================================
+  # Redis
+  # ============================================================================
+  - job_name: 'redis'
+    static_configs:
+      - targets: ['redis:6379']
+        labels:
+          instance: 'gericure-redis'
+          service: 'cache'
+
+  # ============================================================================
+  # Docker containers
+  # ============================================================================
+  - job_name: 'docker'
+    static_configs:
+      - targets: ['unix:///var/run/docker.sock']
+
+  # ============================================================================
+  # System metrics (Node Exporter)
+  # ============================================================================
+  - job_name: 'system'
+    static_configs:
+      - targets: ['localhost:9100']
+        labels:
+          instance: 'gericure-system'
+          service: 'infrastructure'
+
+# ============================================================================
+# ALERT RULES (Prometheus alerting)
+# ============================================================================
+
+# File: /etc/prometheus/rules/gericure-alerts.yml
+# This would be a separate file with alert definitions:
+#
+# groups:
+#   - name: gericure_alerts
+#     interval: 30s
+#     rules:
+#       - alert: HighErrorRate
+#         expr: rate(http_requests_total{status=~"5.."}[5m]) > 0.05
+#         for: 10m
+#         annotations:
+#           summary: "High error rate detected"
+#
+#       - alert: DatabaseDown
+#         expr: up{job="postgres"} == 0
+#         for: 1m
+#         annotations:
+#           summary: "PostgreSQL database is down"
+#
+#       - alert: HighMemoryUsage
+#         expr: (container_memory_usage_bytes{name="gericure-app"} / 1024 / 1024) > 1800
+#         for: 5m
+#         annotations:
+#           summary: "High memory usage in Gericure app"
+#
+#       - alert: HighCPUUsage
+#         expr: rate(container_cpu_usage_seconds_total{name="gericure-app"}[5m]) > 1.5
+#         for: 5m
+#         annotations:
+#           summary: "High CPU usage in Gericure app"

@@ -1,0 +1,1103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Continuum — Health Memory Platform</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            heading: ['Manrope', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              900: '#0A192F',
+              800: '#112240',
+              700: '#1E293B',
+              600: '#334155',
+              500: '#475569',
+              teal: '#0D9488',
+              'teal-dark': '#0F766E',
+              'teal-light': '#F0FDFA',
+              accent: '#0284C7',
+              border: '#E2E8F0',
+              card: '#FFFFFF',
+              bg: '#F8FAFC',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+    }
+    body {
+      background-color: #F8FAFC;
+      color: #0A192F;
+      font-family: 'Inter', sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    .font-heading {
+      font-family: 'Manrope', sans-serif;
+    }
+    .view-section {
+      display: none;
+      opacity: 0;
+      transition: opacity 0.2s ease-in-out;
+    }
+    .view-section.active {
+      display: flex;
+      flex-direction: column;
+      opacity: 1;
+      height: 100vh;
+      overflow: hidden;
+    }
+  </style>
+</head>
+<body class="antialiased selection:bg-teal-100 selection:text-teal-900 text-slate-800">
+
+  <!-- ======================= LANDING PAGE ======================= -->
+  <div id="landing-view" class="view-section active">
+    <!-- Header -->
+    <header class="shrink-0 bg-white border-b border-slate-200">
+      <div class="max-w-7xl mx-auto px-8 h-14 flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-lg bg-teal-600 flex items-center justify-center shadow-md">
+            <span class="text-white font-heading font-bold text-sm">C</span>
+          </div>
+          <div>
+            <h1 class="text-sm font-heading font-bold text-slate-900 leading-tight">CONTINUUM</h1>
+            <p class="text-[10px] font-medium text-teal-600 tracking-wide leading-tight">HEALTH MEMORY</p>
+          </div>
+        </div>
+        <nav class="flex items-center gap-6">
+          <a href="#" class="text-slate-700 font-medium text-sm hover:text-slate-900 transition">Home</a>
+          <a href="#" class="text-slate-700 font-medium text-sm hover:text-slate-900 transition">About</a>
+          <a href="#" onclick="navigateToAccountTypes()" class="text-slate-700 font-medium text-sm hover:text-slate-900 transition">Sign in</a>
+          <button onclick="navigateToAccountTypes()" class="px-4 py-1.5 bg-teal-600 hover:bg-teal-700 text-white font-medium rounded-lg transition text-sm">
+            Get Started →
+          </button>
+        </nav>
+      </div>
+    </header>
+
+    <!-- Hero Section -->
+    <main class="flex-1 min-h-0 flex items-center">
+      <div class="max-w-7xl mx-auto px-8 grid grid-cols-2 gap-10 items-center w-full">
+        
+        <!-- Left Content -->
+        <div>
+          <div class="inline-block mb-3">
+            <span class="px-3 py-1 bg-teal-100 border border-teal-300 rounded-full text-teal-700 text-xs font-medium tracking-wide">
+              ✓ PERSISTENT HEALTH MEMORY
+            </span>
+          </div>
+          
+          <h1 class="text-3xl font-heading font-bold text-slate-900 mb-3 leading-tight">
+            One continuous record for a better care journey.
+          </h1>
+          
+          <p class="text-sm text-slate-600 mb-4 leading-relaxed">
+            Continuum brings a patient's health information together in one secure place, helping patients, caregivers and doctors work from the same longitudinal record.
+          </p>
+
+          <div class="flex gap-3">
+            <button onclick="navigateToAccountTypes()" class="px-5 py-2 bg-slate-900 hover:bg-slate-800 text-white font-medium rounded-lg transition text-sm">
+              Get Started →
+            </button>
+            <button class="px-5 py-2 bg-white border border-slate-300 hover:bg-slate-50 text-slate-900 font-medium rounded-lg transition text-sm">
+              Learn More
+            </button>
+          </div>
+
+          <!-- Features -->
+          <div class="flex gap-6 mt-6 text-xs flex-wrap">
+            <div class="flex items-center gap-1.5">
+              <span class="text-teal-600 font-bold">✓</span>
+              <span class="text-slate-700">HIPAA & Consent Compliant</span>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <span class="text-teal-600 font-bold">🔒</span>
+              <span class="text-slate-700">Zero health condition Categorization Bias</span>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <span class="text-teal-600 font-bold">◆</span>
+              <span class="text-slate-700">Longitudinal Care Continuity</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Content - Health Memory Vault Card -->
+        <div class="flex justify-center">
+          <div class="bg-white rounded-2xl shadow-lg border border-slate-200 p-5 w-full max-w-xs">
+            <div class="flex items-center gap-2 mb-4">
+              <div class="w-9 h-9 rounded-lg bg-teal-100 flex items-center justify-center">
+                <svg class="w-5 h-5 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+              </div>
+              <div>
+                <h3 class="font-heading font-bold text-slate-900 text-sm">Health Memory Vault</h3>
+                <p class="text-[10px] text-slate-600">Longitudinal Care Synthesis</p>
+              </div>
+            </div>
+
+            <div class="flex justify-center py-4">
+              <div class="w-14 h-14 rounded-full bg-slate-100 flex items-center justify-center">
+                <svg class="w-7 h-7 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                </svg>
+              </div>
+            </div>
+
+            <p class="text-center text-slate-700 font-medium mb-2 text-sm">
+              Sign in to view your Health Memory Vault
+            </p>
+            
+            <p class="text-center text-xs text-slate-600 mb-4">
+              Your Personal Information, Health Records, Medications and Reports are only visible to you once signed in.
+            </p>
+
+            <button onclick="navigateToAccountTypes()" class="w-full px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white font-medium rounded-lg transition mb-2 text-sm">
+              Sign in as Patient
+            </button>
+
+            <p class="text-center text-xs text-slate-600 mb-2">
+              No account signed in
+            </p>
+
+            <a href="#" class="text-center block text-xs text-teal-600 font-medium hover:text-teal-700 transition">
+              Enter Portal →
+            </a>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- ======================= ACCOUNT TYPES PAGE ======================= -->
+  <div id="account-types-view" class="view-section bg-white">
+    <!-- Header -->
+    <header class="shrink-0 bg-white border-b border-slate-200">
+      <div class="max-w-7xl mx-auto px-8 h-14 flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-lg bg-teal-600 flex items-center justify-center shadow-md">
+            <span class="text-white font-heading font-bold text-sm">C</span>
+          </div>
+          <div>
+            <h1 class="text-sm font-heading font-bold text-slate-900 leading-tight">CONTINUUM</h1>
+            <p class="text-[10px] font-medium text-teal-600 tracking-wide leading-tight">HEALTH MEMORY</p>
+          </div>
+        </div>
+        <nav class="flex items-center gap-6">
+          <a href="#" class="text-slate-700 font-medium text-sm hover:text-slate-900 transition">Home</a>
+          <a href="#" class="text-slate-700 font-medium text-sm hover:text-slate-900 transition">About</a>
+          <a href="#" class="text-slate-700 font-medium text-sm hover:text-slate-900 transition">Sign in</a>
+          <button onclick="navigateToAccountTypes()" class="px-4 py-1.5 bg-teal-600 hover:bg-teal-700 text-white font-medium rounded-lg transition text-sm">
+            Get Started →
+          </button>
+        </nav>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-1 min-h-0 flex items-center justify-center">
+      <div class="max-w-5xl mx-auto px-8 w-full">
+        
+        <!-- Title Section -->
+        <div class="text-center mb-6">
+          <div class="inline-block mb-3">
+            <span class="px-3 py-1 bg-teal-100 border border-teal-300 rounded-full text-teal-700 text-xs font-medium tracking-wide uppercase">
+              Account Access
+            </span>
+          </div>
+          <h1 class="text-2xl font-heading font-bold text-slate-900 mb-2">Choose your account</h1>
+          <p class="text-sm text-slate-600">Select the account type you want to use with Continuum.</p>
+        </div>
+
+        <!-- Account Type Cards -->
+        <div class="grid grid-cols-3 gap-5 mb-5">
+          
+          <!-- PATIENT CARD -->
+          <div class="bg-white border border-slate-200 rounded-xl p-5 hover:shadow-lg transition">
+            <div class="w-9 h-9 rounded-lg bg-teal-100 flex items-center justify-center mb-3">
+              <svg class="w-5 h-5 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+              </svg>
+            </div>
+            <h3 class="text-base font-heading font-bold text-slate-900 mb-1.5">PATIENT</h3>
+            <p class="text-slate-600 mb-4 leading-relaxed text-xs">Manage your personal health memory and control access to your information.</p>
+            
+            <button onclick="navigateToPatientLogin('signin')" class="w-full px-3 py-2 bg-slate-900 hover:bg-slate-800 text-white font-medium rounded-lg transition mb-2 text-sm">
+              Register as Patient
+            </button>
+            <button onclick="navigateToPatientLogin('signin')" class="w-full text-teal-600 hover:text-teal-700 font-medium text-xs transition">
+              Sign in as Patient
+            </button>
+          </div>
+
+          <!-- CAREGIVER CARD -->
+          <div class="bg-white border border-slate-200 rounded-xl p-5 hover:shadow-lg transition">
+            <div class="w-9 h-9 rounded-lg bg-teal-100 flex items-center justify-center mb-3">
+              <svg class="w-5 h-5 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+              </svg>
+            </div>
+            <h3 class="text-base font-heading font-bold text-slate-900 mb-1.5">CAREGIVER</h3>
+            <p class="text-slate-600 mb-4 leading-relaxed text-xs">Support a patient's health memory by recording observations and relevant information.</p>
+            
+            <button onclick="navigateToCaretakerLogin('signin')" class="w-full px-3 py-2 bg-slate-900 hover:bg-slate-800 text-white font-medium rounded-lg transition mb-2 text-sm">
+              Register as Caregiver
+            </button>
+            <button onclick="navigateToCaretakerLogin('signin')" class="w-full text-teal-600 hover:text-teal-700 font-medium text-xs transition">
+              Sign in as Caregiver
+            </button>
+          </div>
+
+          <!-- DOCTOR CARD -->
+          <div class="bg-white border border-slate-200 rounded-xl p-5 hover:shadow-lg transition">
+            <div class="w-9 h-9 rounded-lg bg-teal-100 flex items-center justify-center mb-3">
+              <svg class="w-5 h-5 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+              </svg>
+            </div>
+            <h3 class="text-base font-heading font-bold text-slate-900 mb-1.5">DOCTOR</h3>
+            <p class="text-slate-600 mb-4 leading-relaxed text-xs">Access authorized patient information and request additional health context when required.</p>
+            
+            <button onclick="navigateToDoctorLogin('signin')" class="w-full px-3 py-2 bg-slate-900 hover:bg-slate-800 text-white font-medium rounded-lg transition mb-2 text-sm">
+              Register as Doctor
+            </button>
+            <button onclick="navigateToDoctorLogin('signin')" class="w-full text-teal-600 hover:text-teal-700 font-medium text-xs transition">
+              Sign in as Doctor
+            </button>
+          </div>
+        </div>
+
+        <!-- Sign In Link -->
+        <div class="text-center">
+          <p class="text-slate-600 text-sm">Already have an account? <a href="#" onclick="navigateToAccountTypes()" class="text-teal-600 hover:text-teal-700 font-medium transition">Sign in</a></p>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- ======================= PATIENT SIGNIN PAGE ======================= -->
+  <div id="patient-signin-view" class="view-section bg-white">
+    <!-- Header -->
+    <header class="shrink-0 bg-white border-b border-slate-200">
+      <div class="max-w-7xl mx-auto px-8 h-14 flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-lg bg-teal-600 flex items-center justify-center shadow-md">
+            <span class="text-white font-heading font-bold text-sm">C</span>
+          </div>
+          <div>
+            <h1 class="text-sm font-heading font-bold text-slate-900 leading-tight">CONTINUUM</h1>
+            <p class="text-[10px] font-medium text-teal-600 tracking-wide leading-tight">HEALTH MEMORY</p>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-1 min-h-0 flex items-center justify-center">
+      <div class="max-w-md w-full mx-auto px-8">
+        
+        <!-- Back Link -->
+        <button onclick="navigateToAccountTypes()" class="text-teal-600 hover:text-teal-700 font-medium text-sm mb-4 flex items-center gap-2">
+          ← Back to account types
+        </button>
+
+        <!-- Title -->
+        <h1 class="text-2xl font-heading font-bold text-slate-900 mb-1.5">Patient Login</h1>
+        <p class="text-slate-600 mb-4 text-sm">Sign in with your phone number.</p>
+
+        <!-- Form -->
+        <form onsubmit="patientLogin(event)" class="space-y-3">
+          <div>
+            <label class="block text-sm font-medium text-slate-700 mb-1.5">Phone Number</label>
+            <input type="tel" id="patient-phone" placeholder="Enter phone number" required
+              class="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent text-sm">
+          </div>
+          <div id="patient-error" class="text-red-500 text-sm hidden"></div>
+          <button type="submit" class="w-full px-4 py-2.5 bg-teal-600 hover:bg-teal-700 text-white font-medium rounded-lg transition text-sm">
+            Sign In
+          </button>
+        </form>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- ======================= CARETAKER SIGNIN PAGE ======================= -->
+  <div id="caretaker-signin-view" class="view-section bg-white">
+    <!-- Header -->
+    <header class="shrink-0 bg-white border-b border-slate-200">
+      <div class="max-w-7xl mx-auto px-8 h-14 flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-lg bg-teal-600 flex items-center justify-center shadow-md">
+            <span class="text-white font-heading font-bold text-sm">C</span>
+          </div>
+          <div>
+            <h1 class="text-sm font-heading font-bold text-slate-900 leading-tight">CONTINUUM</h1>
+            <p class="text-[10px] font-medium text-teal-600 tracking-wide leading-tight">HEALTH MEMORY</p>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-1 min-h-0 flex items-center justify-center">
+      <div class="max-w-md w-full mx-auto px-8">
+        
+        <!-- Back Link -->
+        <button onclick="navigateToAccountTypes()" class="text-teal-600 hover:text-teal-700 font-medium text-sm mb-4 flex items-center gap-2">
+          ← Back to account types
+        </button>
+
+        <!-- Title -->
+        <h1 class="text-2xl font-heading font-bold text-slate-900 mb-1.5">Caregiver Login</h1>
+        <p class="text-slate-600 mb-4 text-sm">Sign in with your name and password.</p>
+
+        <!-- Form -->
+        <form onsubmit="caretakerLogin(event)" class="space-y-3">
+          <div>
+            <label class="block text-sm font-medium text-slate-700 mb-1.5">Name</label>
+            <input type="text" id="caretaker-name" placeholder="Enter your name" required
+              class="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent text-sm">
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-slate-700 mb-1.5">Password</label>
+            <input type="password" id="caretaker-password" placeholder="Enter password" required
+              class="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent text-sm">
+          </div>
+          <div id="caretaker-error" class="text-red-500 text-sm hidden"></div>
+          <button type="submit" class="w-full px-4 py-2.5 bg-teal-600 hover:bg-teal-700 text-white font-medium rounded-lg transition text-sm">
+            Sign In
+          </button>
+        </form>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- ======================= DOCTOR SIGNIN PAGE ======================= -->
+  <div id="doctor-signin-view" class="view-section bg-white">
+    <!-- Header -->
+    <header class="shrink-0 bg-white border-b border-slate-200">
+      <div class="max-w-7xl mx-auto px-8 h-14 flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-lg bg-teal-600 flex items-center justify-center shadow-md">
+            <span class="text-white font-heading font-bold text-sm">C</span>
+          </div>
+          <div>
+            <h1 class="text-sm font-heading font-bold text-slate-900 leading-tight">CONTINUUM</h1>
+            <p class="text-[10px] font-medium text-teal-600 tracking-wide leading-tight">HEALTH MEMORY</p>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-1 min-h-0 flex items-center justify-center">
+      <div class="max-w-md w-full mx-auto px-8">
+        
+        <!-- Back Link -->
+        <button onclick="navigateToAccountTypes()" class="text-teal-600 hover:text-teal-700 font-medium text-sm mb-4 flex items-center gap-2">
+          ← Back to account types
+        </button>
+
+        <!-- Title -->
+        <h1 class="text-2xl font-heading font-bold text-slate-900 mb-1.5">Doctor Login</h1>
+        <p class="text-slate-600 mb-4 text-sm">Sign in with your email and password.</p>
+
+        <!-- Form -->
+        <form onsubmit="doctorLogin(event)" class="space-y-3">
+          <div>
+            <label class="block text-sm font-medium text-slate-700 mb-1.5">Email</label>
+            <input type="email" id="doctor-email" placeholder="Enter email" required
+              class="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent text-sm">
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-slate-700 mb-1.5">Password</label>
+            <input type="password" id="doctor-password" placeholder="Enter password" required
+              class="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent text-sm">
+          </div>
+          <div id="doctor-error" class="text-red-500 text-sm hidden"></div>
+          <button type="submit" class="w-full px-4 py-2.5 bg-teal-600 hover:bg-teal-700 text-white font-medium rounded-lg transition text-sm">
+            Sign In
+          </button>
+        </form>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- ======================= PATIENT DASHBOARD ======================= -->
+  <div id="patient-dashboard" class="view-section bg-slate-50">
+    <!-- Header -->
+    <header class="shrink-0 bg-white border-b border-slate-200 shadow-sm">
+      <div class="max-w-7xl mx-auto px-8 h-14 flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-lg bg-teal-600 flex items-center justify-center">
+            <span class="text-white font-heading font-bold text-sm">C</span>
+          </div>
+          <h1 class="text-base font-heading font-bold text-slate-900">Continuum</h1>
+        </div>
+        <button onclick="logout()" class="px-3 py-1.5 bg-red-500 hover:bg-red-600 text-white rounded-lg font-medium text-xs transition">
+          Logout
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-1 min-h-0 max-w-7xl mx-auto px-6 py-3 w-full flex flex-col gap-3 overflow-hidden">
+      
+      <!-- Welcome Card -->
+      <div class="bg-white rounded-xl shadow-sm border border-slate-200 px-5 py-2.5 shrink-0">
+        <h2 class="text-lg font-heading font-bold text-slate-900" id="patient-name-display">Welcome</h2>
+        <p class="text-slate-600 text-xs" id="patient-id-display"></p>
+      </div>
+
+      <!-- Three Column Layout -->
+      <div class="grid grid-cols-3 gap-3 shrink-0">
+        
+        <!-- Personal Information -->
+        <div class="col-span-1">
+          <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-3">
+            <h3 class="text-xs font-heading font-bold text-slate-900 mb-2 uppercase tracking-wide">Personal Information</h3>
+            <div class="space-y-1.5">
+              <div class="flex justify-between text-xs">
+                <span class="text-slate-500">Full Name</span>
+                <span class="text-slate-900 font-medium" id="pi-name">—</span>
+              </div>
+              <div class="flex justify-between text-xs">
+                <span class="text-slate-500">Phone</span>
+                <span class="text-slate-900 font-medium" id="pi-phone">—</span>
+              </div>
+              <div class="flex justify-between text-xs">
+                <span class="text-slate-500">DOB</span>
+                <span class="text-slate-900 font-medium" id="pi-dob">—</span>
+              </div>
+              <div class="flex justify-between text-xs">
+                <span class="text-slate-500">Blood Group</span>
+                <span class="text-slate-900 font-medium" id="pi-blood">—</span>
+              </div>
+              <div class="flex justify-between text-xs">
+                <span class="text-slate-500">Gender</span>
+                <span class="text-slate-900 font-medium" id="pi-gender">—</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Emergency Contact -->
+        <div class="col-span-1">
+          <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-3">
+            <h3 class="text-xs font-heading font-bold text-slate-900 mb-2 uppercase tracking-wide">Emergency Contact</h3>
+            <div class="space-y-1.5">
+              <div class="flex justify-between text-xs">
+                <span class="text-slate-500">Name</span>
+                <span class="text-slate-900 font-medium" id="ec-name">—</span>
+              </div>
+              <div class="flex justify-between text-xs">
+                <span class="text-slate-500">Relation</span>
+                <span class="text-slate-900 font-medium" id="ec-relation">—</span>
+              </div>
+              <div class="flex justify-between text-xs">
+                <span class="text-slate-500">Phone</span>
+                <span class="text-slate-900 font-medium" id="ec-phone">—</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Current Medications -->
+        <div class="col-span-1">
+          <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-3">
+            <h3 class="text-xs font-heading font-bold text-slate-900 mb-2 uppercase tracking-wide">Current Medications</h3>
+            <div id="medications-container" class="space-y-1.5">
+              <!-- Medications will be inserted here -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Timeline + Observations side by side -->
+      <div class="grid grid-cols-2 gap-3 flex-1 min-h-0">
+
+        <!-- Medical Timeline -->
+        <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-3 flex flex-col min-h-0">
+          <h3 class="text-xs font-heading font-bold text-slate-900 mb-2 uppercase tracking-wide shrink-0">Medical Timeline</h3>
+          <div id="timeline-container" class="space-y-1.5 overflow-hidden">
+            <!-- Timeline items will be inserted here -->
+          </div>
+        </div>
+
+        <!-- Caregiver Observations -->
+        <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-3 flex flex-col min-h-0">
+          <h3 class="text-xs font-heading font-bold text-slate-900 mb-2 uppercase tracking-wide shrink-0">Caregiver Observations</h3>
+          <div id="observations-container" class="space-y-1.5 overflow-hidden">
+            <!-- Observations will be inserted here -->
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- ======================= CARETAKER DASHBOARD ======================= -->
+  <div id="caretaker-dashboard" class="view-section bg-slate-50">
+    <!-- Header -->
+    <header class="shrink-0 bg-white border-b border-slate-200 shadow-sm">
+      <div class="max-w-7xl mx-auto px-8 h-14 flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-lg bg-teal-600 flex items-center justify-center">
+            <span class="text-white font-heading font-bold text-sm">C</span>
+          </div>
+          <h1 class="text-base font-heading font-bold text-slate-900">Continuum</h1>
+        </div>
+        <button onclick="logout()" class="px-3 py-1.5 bg-red-500 hover:bg-red-600 text-white rounded-lg font-medium text-xs transition">
+          Logout
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-1 min-h-0 max-w-7xl mx-auto px-6 py-3 w-full flex flex-col gap-3 overflow-hidden">
+      
+      <!-- Welcome Card -->
+      <div class="bg-white rounded-xl shadow-sm border border-slate-200 px-5 py-2.5 shrink-0">
+        <h2 class="text-lg font-heading font-bold text-slate-900" id="caretaker-name-display">Welcome</h2>
+        <p class="text-slate-600 text-xs">Caring for patient health records</p>
+      </div>
+
+      <!-- Patient Being Cared For -->
+      <div class="grid grid-cols-2 gap-3 shrink-0">
+        <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-4">
+          <h3 class="text-xs font-heading font-bold text-slate-900 mb-2 uppercase tracking-wide">Patient Information</h3>
+          <div class="space-y-1.5">
+            <div class="flex justify-between text-xs">
+              <span class="text-slate-500">Patient Name</span>
+              <span class="text-slate-900 font-medium" id="ct-patient-name">—</span>
+            </div>
+            <div class="flex justify-between text-xs">
+              <span class="text-slate-500">Contact Phone</span>
+              <span class="text-slate-900 font-medium" id="ct-patient-phone">—</span>
+            </div>
+            <div class="flex justify-between text-xs">
+              <span class="text-slate-500">Address</span>
+              <span class="text-slate-900 font-medium text-right" id="ct-patient-address">—</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-4">
+          <h3 class="text-xs font-heading font-bold text-slate-900 mb-2 uppercase tracking-wide">Your Information</h3>
+          <div class="space-y-1.5">
+            <div class="flex justify-between text-xs">
+              <span class="text-slate-500">Caretaker Name</span>
+              <span class="text-slate-900 font-medium" id="ct-caretaker-name">—</span>
+            </div>
+            <div class="flex justify-between text-xs">
+              <span class="text-slate-500">Relation</span>
+              <span class="text-slate-900 font-medium" id="ct-relation">—</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Observations -->
+      <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-4 flex-1 min-h-0 flex flex-col">
+        <h3 class="text-xs font-heading font-bold text-slate-900 mb-2 uppercase tracking-wide shrink-0">Your Observations</h3>
+        <div id="ct-observations-container" class="space-y-1.5 overflow-hidden">
+          <!-- Observations will be inserted here -->
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- ======================= DOCTOR DASHBOARD ======================= -->
+  <div id="doctor-dashboard" class="view-section bg-slate-50">
+    <!-- Header -->
+    <header class="shrink-0 bg-white border-b border-slate-200 shadow-sm">
+      <div class="max-w-7xl mx-auto px-8 h-14 flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-lg bg-teal-600 flex items-center justify-center">
+            <span class="text-white font-heading font-bold text-sm">C</span>
+          </div>
+          <h1 class="text-base font-heading font-bold text-slate-900">Continuum</h1>
+        </div>
+        <button onclick="logout()" class="px-3 py-1.5 bg-red-500 hover:bg-red-600 text-white rounded-lg font-medium text-xs transition">
+          Logout
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-1 min-h-0 max-w-7xl mx-auto px-6 py-3 w-full flex flex-col gap-3 overflow-hidden">
+      
+      <!-- Welcome Card -->
+      <div class="bg-white rounded-xl shadow-sm border border-slate-200 px-5 py-2.5 shrink-0">
+        <h2 class="text-lg font-heading font-bold text-slate-900" id="doctor-name-display">Welcome</h2>
+        <p class="text-slate-600 text-xs" id="doctor-info-display"></p>
+      </div>
+
+      <!-- Doctor Information -->
+      <div class="grid grid-cols-2 gap-3 shrink-0">
+        <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-4">
+          <h3 class="text-xs font-heading font-bold text-slate-900 mb-2 uppercase tracking-wide">Doctor Profile</h3>
+          <div class="space-y-1.5">
+            <div class="flex justify-between text-xs">
+              <span class="text-slate-500">Name</span>
+              <span class="text-slate-900 font-medium" id="dr-name">—</span>
+            </div>
+            <div class="flex justify-between text-xs">
+              <span class="text-slate-500">Email</span>
+              <span class="text-slate-900 font-medium" id="dr-email">—</span>
+            </div>
+            <div class="flex justify-between text-xs">
+              <span class="text-slate-500">Phone</span>
+              <span class="text-slate-900 font-medium" id="dr-phone">—</span>
+            </div>
+            <div class="flex justify-between text-xs">
+              <span class="text-slate-500">Hospital</span>
+              <span class="text-slate-900 font-medium" id="dr-hospital">—</span>
+            </div>
+            <div class="flex justify-between text-xs">
+              <span class="text-slate-500">Specialization</span>
+              <span class="text-slate-900 font-medium" id="dr-specialization">—</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-4">
+          <h3 class="text-xs font-heading font-bold text-slate-900 mb-2 uppercase tracking-wide">Patients with Consent</h3>
+          <div id="dr-patients-list" class="space-y-1.5">
+            <!-- Patients will be listed here -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Patient Records Access -->
+      <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-4 flex-1 min-h-0 flex flex-col overflow-hidden">
+        <h3 class="text-xs font-heading font-bold text-slate-900 mb-2 uppercase tracking-wide shrink-0">Patient Records</h3>
+        
+        <div class="mb-2 shrink-0">
+          <label class="block text-xs font-medium text-slate-700 mb-1">Select Patient</label>
+          <select id="patient-select" onchange="loadPatientRecords()" class="w-full max-w-md px-3 py-1.5 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 text-sm">
+            <option value="">Choose a patient...</option>
+          </select>
+        </div>
+
+        <div id="patient-records-container" class="overflow-hidden min-h-0 flex-1">
+          <!-- Patient records will appear here -->
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <script>
+    // ======================================================
+    // SEEDED DATA
+    // ======================================================
+    const seedData = {
+      doctor: {
+        id: 1,
+        firstName: "Dr.",
+        lastName: "Ramesh",
+        email: "dr.ramesh.demo@hospital.com",
+        phone: "555-1234",
+        hospital: "CMC Hospital, Chennai",
+        specialization: "Internal Medicine"
+      },
+      patient: {
+        id: 1,
+        firstName: "Nagarajan",
+        lastName: "S.",
+        phone: "9486508579",
+        dob: "1966-05-23",
+        bloodGroup: "O+",
+        gender: "M",
+        address: "42 Elderly Care Lane, Chennai, TN 600001",
+        emergencyContact: {
+          name: "Thanu Shree N",
+          relation: "Daughter",
+          phone: "9876543210"
+        }
+      },
+      medicalRecords: [
+        {
+          date: "2024-09-10",
+          category: "diagnosis",
+          type: "diagnosis",
+          description: "Type 2 Diabetes Mellitus confirmed. HbA1c: 8.2%",
+          source: "hospital_lab"
+        },
+        {
+          date: "2025-04-05",
+          category: "diagnosis",
+          type: "diagnosis",
+          description: "Essential Hypertension (Stage 2). BP: 152/94 mmHg. Risk for cardiovascular complications.",
+          source: "clinic_visit"
+        },
+        {
+          date: "2025-08-15",
+          category: "vitals",
+          type: "vitals",
+          description: "BP: 138/88 mmHg. HR: 72 bpm. Ankle edema resolving.",
+          source: "clinic_visit"
+        },
+        {
+          date: "2026-09-08",
+          category: "follow-up",
+          type: "follow-up",
+          description: "Annual review: Patient stable on current regimen. HbA1c: 7.1% (improved). BP: 136/86 mmHg (well-controlled). No new complaints.",
+          source: "clinic_visit"
+        }
+      ],
+      medicines: [
+        {
+          name: "Metformin",
+          dosage: "750mg",
+          frequency: "Twice daily",
+          prescribed: "2025-01-15",
+          indication: "Type 2 Diabetes Mellitus",
+          note: "Dosage increased from 500mg to 750mg due to suboptimal glycemic control (HbA1c: 7.8%)",
+          isCurrent: true
+        },
+        {
+          name: "Amlodipine",
+          dosage: "2.5mg",
+          frequency: "Once daily",
+          prescribed: "2025-08-12",
+          indication: "Essential Hypertension",
+          note: "Dosage reduced from 5mg to 2.5mg due to ankle edema side effects. BP now well-controlled at 138/88.",
+          isCurrent: true
+        }
+      ],
+      observations: [
+        {
+          caretaker: "Thanu Shree N",
+          date: "2025-01-20",
+          category: "caregiver_observation",
+          text: "Father's energy levels improving after medication adjustment. Better appetite.",
+          severity: "mild"
+        }
+      ]
+    };
+
+    // ======================================================
+    // NAVIGATION
+    // ======================================================
+
+    function showView(viewId) {
+      document.querySelectorAll('.view-section').forEach(section => {
+        section.classList.remove('active');
+      });
+      document.getElementById(viewId).classList.add('active');
+      window.scrollTo(0, 0);
+    }
+
+    function navigateToAccountTypes() {
+      showView('account-types-view');
+    }
+
+    function navigateToPatientLogin(action) {
+      showView('patient-signin-view');
+    }
+
+    function navigateToCaretakerLogin(action) {
+      showView('caretaker-signin-view');
+    }
+
+    function navigateToDoctorLogin(action) {
+      showView('doctor-signin-view');
+    }
+
+    // ======================================================
+    // LOGIN FUNCTIONS
+    // ======================================================
+
+    function patientLogin(event) {
+      event.preventDefault();
+      const phone = document.getElementById('patient-phone').value.trim();
+      const errorDiv = document.getElementById('patient-error');
+
+      if (phone === seedData.patient.phone) {
+        sessionStorage.setItem('userType', 'patient');
+        sessionStorage.setItem('patientId', seedData.patient.id);
+        showView('patient-dashboard');
+        renderPatientDashboard();
+      } else {
+        errorDiv.textContent = 'Invalid phone number. Please check and try again.';
+        errorDiv.classList.remove('hidden');
+      }
+    }
+
+    function caretakerLogin(event) {
+      event.preventDefault();
+      const name = document.getElementById('caretaker-name').value.trim();
+      const password = document.getElementById('caretaker-password').value.trim();
+      const errorDiv = document.getElementById('caretaker-error');
+
+      if (name === seedData.patient.emergencyContact.name && password === 'demo123') {
+        sessionStorage.setItem('userType', 'caretaker');
+        sessionStorage.setItem('caretakerName', name);
+        sessionStorage.setItem('patientId', seedData.patient.id);
+        showView('caretaker-dashboard');
+        renderCaretakerDashboard();
+      } else {
+        errorDiv.textContent = 'Invalid name or password. Please check and try again.';
+        errorDiv.classList.remove('hidden');
+      }
+    }
+
+    function doctorLogin(event) {
+      event.preventDefault();
+      const email = document.getElementById('doctor-email').value.trim();
+      const password = document.getElementById('doctor-password').value.trim();
+      const errorDiv = document.getElementById('doctor-error');
+
+      if (email === seedData.doctor.email && password === 'demo123') {
+        sessionStorage.setItem('userType', 'doctor');
+        sessionStorage.setItem('doctorId', seedData.doctor.id);
+        showView('doctor-dashboard');
+        renderDoctorDashboard();
+      } else {
+        errorDiv.textContent = 'Invalid email or password. Please check and try again.';
+        errorDiv.classList.remove('hidden');
+      }
+    }
+
+    function logout() {
+      sessionStorage.clear();
+      showView('landing-view');
+      document.getElementById('patient-phone').value = '';
+      document.getElementById('caretaker-name').value = '';
+      document.getElementById('caretaker-password').value = '';
+      document.getElementById('doctor-email').value = '';
+      document.getElementById('doctor-password').value = '';
+    }
+
+    // ======================================================
+    // DATE FORMATTING
+    // ======================================================
+
+    function formatDate(dateStr) {
+      const date = new Date(dateStr + 'T00:00:00');
+      return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+    }
+
+    // ======================================================
+    // DASHBOARD RENDERERS
+    // ======================================================
+
+    function renderPatientDashboard() {
+      const patient = seedData.patient;
+
+      document.getElementById('patient-name-display').textContent = `Welcome, ${patient.firstName}`;
+      document.getElementById('patient-id-display').textContent = `Patient ID: ${patient.id}`;
+
+      document.getElementById('pi-name').textContent = `${patient.firstName} ${patient.lastName}`;
+      document.getElementById('pi-phone').textContent = patient.phone;
+      document.getElementById('pi-dob').textContent = formatDate(patient.dob);
+      document.getElementById('pi-blood').textContent = patient.bloodGroup;
+      document.getElementById('pi-gender').textContent = patient.gender;
+
+      document.getElementById('ec-name').textContent = patient.emergencyContact.name;
+      document.getElementById('ec-relation').textContent = patient.emergencyContact.relation;
+      document.getElementById('ec-phone').textContent = patient.emergencyContact.phone;
+
+      const medsContainer = document.getElementById('medications-container');
+      medsContainer.innerHTML = seedData.medicines.filter(m => m.isCurrent).map(med => `
+        <div class="flex justify-between text-xs">
+          <span class="text-slate-900 font-medium">${med.name}</span>
+          <span class="text-slate-600">${med.dosage} • ${med.frequency}</span>
+        </div>
+      `).join('');
+
+      const timelineContainer = document.getElementById('timeline-container');
+      timelineContainer.innerHTML = seedData.medicalRecords.map(record => `
+        <div class="border-l-2 border-teal-500 pl-2 py-0.5">
+          <p class="font-medium text-slate-900 text-xs">${formatDate(record.date)} <span class="text-slate-500 capitalize font-normal">· ${record.category.replace('_', ' ')}</span></p>
+          <p class="text-slate-700 text-xs leading-snug">${record.description}</p>
+        </div>
+      `).join('');
+
+      const obsContainer = document.getElementById('observations-container');
+      obsContainer.innerHTML = seedData.observations.map(obs => `
+        <div class="bg-blue-50 border border-blue-200 rounded-lg p-2">
+          <div class="flex justify-between items-start mb-1">
+            <p class="font-medium text-slate-900 text-xs">${obs.caretaker}</p>
+            <span class="text-[10px] font-medium text-blue-700 bg-blue-100 px-1.5 py-0.5 rounded">${obs.severity}</span>
+          </div>
+          <p class="text-[10px] text-slate-600 mb-1">${formatDate(obs.date)}</p>
+          <p class="text-slate-700 text-xs leading-snug">${obs.text}</p>
+        </div>
+      `).join('');
+    }
+
+    function renderCaretakerDashboard() {
+      const patient = seedData.patient;
+      const caretaker = sessionStorage.getItem('caretakerName');
+
+      document.getElementById('caretaker-name-display').textContent = `Welcome, ${caretaker}`;
+      document.getElementById('ct-patient-name').textContent = patient.firstName;
+      document.getElementById('ct-patient-phone').textContent = patient.phone;
+      document.getElementById('ct-patient-address').textContent = patient.address;
+      document.getElementById('ct-caretaker-name').textContent = caretaker;
+      document.getElementById('ct-relation').textContent = patient.emergencyContact.relation;
+
+      const obsContainer = document.getElementById('ct-observations-container');
+      const relevantObs = seedData.observations.filter(obs => obs.caretaker === caretaker);
+      
+      obsContainer.innerHTML = relevantObs.map(obs => `
+        <div class="bg-blue-50 border border-blue-200 rounded-lg p-3">
+          <p class="font-medium text-slate-900 mb-1 text-xs">${formatDate(obs.date)}</p>
+          <p class="text-[10px] text-slate-600 capitalize mb-1.5">${obs.category.replace('_', ' ')}</p>
+          <p class="text-slate-700 mb-1.5 text-xs leading-snug">${obs.text}</p>
+          <span class="text-[10px] font-medium text-blue-700 bg-blue-100 px-1.5 py-0.5 rounded">Severity: ${obs.severity}</span>
+        </div>
+      `).join('');
+
+      if (relevantObs.length === 0) {
+        obsContainer.innerHTML = '<p class="text-slate-500 text-center py-4 text-xs">No observations recorded yet.</p>';
+      }
+    }
+
+    function renderDoctorDashboard() {
+      const doctor = seedData.doctor;
+
+      document.getElementById('doctor-name-display').textContent = `Welcome, ${doctor.firstName} ${doctor.lastName}`;
+      document.getElementById('doctor-info-display').textContent = `${doctor.specialization} • ${doctor.hospital}`;
+
+      document.getElementById('dr-name').textContent = `${doctor.firstName} ${doctor.lastName}`;
+      document.getElementById('dr-email').textContent = doctor.email;
+      document.getElementById('dr-phone').textContent = doctor.phone;
+      document.getElementById('dr-hospital').textContent = doctor.hospital;
+      document.getElementById('dr-specialization').textContent = doctor.specialization;
+
+      const patientsList = document.getElementById('dr-patients-list');
+      patientsList.innerHTML = `
+        <div class="bg-teal-50 border border-teal-200 rounded-lg p-2.5">
+          <p class="font-medium text-slate-900 text-xs">${seedData.patient.firstName} ${seedData.patient.lastName}</p>
+          <p class="text-[10px] text-slate-600 mt-0.5">Patient ID: ${seedData.patient.id}</p>
+          <p class="text-[10px] text-teal-700 font-medium mt-1">✓ Consent Approved</p>
+          <p class="text-[10px] text-slate-600 mt-0.5">Expires: 2027-09-08</p>
+        </div>
+      `;
+
+      const patientSelect = document.getElementById('patient-select');
+      patientSelect.innerHTML = `<option value="">Choose a patient...</option>
+        <option value="${seedData.patient.id}">${seedData.patient.firstName} ${seedData.patient.lastName}</option>`;
+    }
+
+    function loadPatientRecords() {
+      const patientId = document.getElementById('patient-select').value;
+      const container = document.getElementById('patient-records-container');
+
+      if (!patientId) {
+        container.innerHTML = '';
+        return;
+      }
+
+      const patient = seedData.patient;
+
+      let html = `
+        <div class="grid grid-cols-2 gap-3 h-full">
+          <div class="space-y-3 overflow-hidden">
+            <div>
+              <h4 class="font-heading font-bold text-slate-900 mb-1.5 text-xs uppercase tracking-wide">Personal Information</h4>
+              <div class="grid grid-cols-2 gap-2 bg-slate-50 rounded-lg p-2.5">
+                <div>
+                  <p class="text-[10px] text-slate-500">Full Name</p>
+                  <p class="text-slate-900 font-medium text-xs">${patient.firstName} ${patient.lastName}</p>
+                </div>
+                <div>
+                  <p class="text-[10px] text-slate-500">Phone</p>
+                  <p class="text-slate-900 font-medium text-xs">${patient.phone}</p>
+                </div>
+                <div>
+                  <p class="text-[10px] text-slate-500">Date of Birth</p>
+                  <p class="text-slate-900 font-medium text-xs">${formatDate(patient.dob)}</p>
+                </div>
+                <div>
+                  <p class="text-[10px] text-slate-500">Gender</p>
+                  <p class="text-slate-900 font-medium text-xs">${patient.gender}</p>
+                </div>
+                <div>
+                  <p class="text-[10px] text-slate-500">Blood Group</p>
+                  <p class="text-slate-900 font-medium text-xs">${patient.bloodGroup}</p>
+                </div>
+                <div>
+                  <p class="text-[10px] text-slate-500">Address</p>
+                  <p class="text-slate-900 font-medium text-xs">${patient.address}</p>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <h4 class="font-heading font-bold text-slate-900 mb-1.5 text-xs uppercase tracking-wide">Current Medications</h4>
+              <div class="grid grid-cols-2 gap-2">
+                ${seedData.medicines.filter(m => m.isCurrent).map(med => `
+                  <div class="bg-green-50 border border-green-200 rounded-lg p-2">
+                    <p class="font-medium text-slate-900 text-xs">${med.name}</p>
+                    <p class="text-[10px] text-slate-600">${med.dosage} • ${med.frequency}</p>
+                    <p class="text-slate-700 text-[10px] mt-1 leading-snug">${med.note}</p>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+          </div>
+
+          <div class="space-y-3 overflow-hidden">
+            <div>
+              <h4 class="font-heading font-bold text-slate-900 mb-1.5 text-xs uppercase tracking-wide">Medical Records</h4>
+              <div class="space-y-1.5">
+                ${seedData.medicalRecords.map(record => `
+                  <div class="border-l-2 border-teal-500 pl-2 py-0.5 bg-slate-50 rounded">
+                    <p class="font-medium text-slate-900 text-xs">${formatDate(record.date)} <span class="text-slate-500 capitalize font-normal">· ${record.category.replace('_', ' ')}</span></p>
+                    <p class="text-slate-700 text-[10px] leading-snug">${record.description}</p>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+
+            <div>
+              <h4 class="font-heading font-bold text-slate-900 mb-1.5 text-xs uppercase tracking-wide">Caregiver Observations</h4>
+              <div class="space-y-1.5">
+                ${seedData.observations.map(obs => `
+                  <div class="bg-blue-50 border border-blue-200 rounded-lg p-2">
+                    <p class="font-medium text-slate-900 text-xs">${obs.caretaker}</p>
+                    <p class="text-[10px] text-slate-600">${formatDate(obs.date)}</p>
+                    <p class="text-slate-700 text-[10px] leading-snug">${obs.text}</p>
+                    <span class="text-[10px] font-medium text-blue-700 bg-blue-100 px-1.5 py-0.5 rounded inline-block mt-1">Severity: ${obs.severity}</span>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+
+      container.innerHTML = html;
+    }
+  </script>
+
+</body>
+</html>

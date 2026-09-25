@@ -1,0 +1,55 @@
+# Core Framework
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+starlette==0.27.0
+
+# Database
+sqlalchemy==2.0.23
+psycopg2-binary==2.9.9
+alembic==1.12.1
+
+# Data Validation
+pydantic==2.5.0
+pydantic-settings==2.1.0
+
+# AI/LLM
+groq==0.4.2
+
+# Authentication & Security
+python-jose[cryptography]==3.3.0
+passlib[bcrypt]==1.7.4
+cryptography==41.0.7
+pyjwt==2.8.0
+python-multipart==0.0.6
+
+# Caching
+redis==5.0.1
+
+# Environment
+python-dotenv==1.0.0
+
+# HTTP Client
+httpx==0.25.2
+requests==2.31.0
+
+# Monitoring & Metrics
+prometheus-client==0.19.0
+
+# Logging
+python-json-logger==2.0.7
+
+# Testing
+pytest==7.4.3
+pytest-asyncio==0.21.1
+pytest-cov==4.1.0
+pytest-benchmark==4.0.0
+
+# Development
+black==23.12.1
+flake8==6.1.0
+mypy==1.7.1
+isort==5.13.2
+
+# Utilities
+python-dateutil==2.8.2
+pytz==2023.3
