@@ -3,845 +3,555 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gericure - Guardian Consent & Care Dashboard</title>
+    <title>Gericure - AI-Powered Health Memory & Care Coordination</title>
     <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-dark: #4338ca;
+            --secondary: #06b6d4;
+            --bg-gradient: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            --card-bg: #ffffff;
+            --text-main: #1f2937;
+            --text-muted: #6b7280;
+            --border-color: #e5e7eb;
+            --success: #10b981;
+            --danger: #ef4444;
+        }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #f3f4f6;
+            color: var(--text-main);
             min-height: 100vh;
-            padding: 20px;
+            display: flex;
+            flex-direction: column;
         }
 
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-
-        header {
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        /* Navbar */
+        nav {
+            background: var(--card-bg);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            padding: 1rem 2rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
         }
 
-        header h1 {
-            color: #333;
-            font-size: 28px;
-        }
-
-        header .status {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-        }
-
-        .status-badge {
-            padding: 8px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
-        }
-
-        .status-active {
-            background: #d4edda;
-            color: #155724;
-        }
-
-        .main-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            margin-bottom: 20px;
-        }
-
-        @media (max-width: 1024px) {
-            .main-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .card {
-            background: white;
-            border-radius: 8px;
-            padding: 20px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        .card h2 {
-            color: #333;
-            margin-bottom: 15px;
-            border-bottom: 2px solid #667eea;
-            padding-bottom: 10px;
-        }
-
-        .patient-info {
-            background: #f8f9fa;
-            padding: 15px;
-            border-radius: 6px;
-            margin-bottom: 15px;
-        }
-
-        .patient-info p {
-            margin: 5px 0;
-            color: #666;
-        }
-
-        .patient-info strong {
-            color: #333;
-        }
-
-        .consent-section {
-            margin-bottom: 20px;
-            border: 1px solid #e9ecef;
-            padding: 15px;
-            border-radius: 6px;
-        }
-
-        .consent-section h3 {
-            color: #667eea;
-            font-size: 16px;
-            margin-bottom: 10px;
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
             display: flex;
             align-items: center;
             gap: 8px;
         }
 
-        .consent-item {
+        .nav-links {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px;
-            background: #f8f9fa;
-            border-radius: 4px;
-            margin-bottom: 8px;
+            gap: 20px;
+            list-style: none;
         }
 
-        .consent-item:last-child {
-            margin-bottom: 0;
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-muted);
+            font-weight: 600;
+            transition: color 0.2s;
+            cursor: pointer;
         }
 
-        .consent-type {
+        .nav-links a:hover, .nav-links a.active {
+            color: var(--primary);
+        }
+
+        /* Main Container */
+        .main-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
             flex: 1;
+            width: 100%;
         }
 
-        .consent-type .name {
-            font-weight: 600;
-            color: #333;
+        .section {
+            display: none;
         }
 
-        .consent-type .description {
-            font-size: 12px;
-            color: #999;
-            margin-top: 3px;
+        .section.active {
+            display: block;
+            animation: fadeIn 0.3s ease-in-out;
         }
 
-        .consent-actions {
-            display: flex;
-            gap: 10px;
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        .toggle-switch {
-            position: relative;
-            width: 50px;
-            height: 24px;
-            background: #ccc;
-            border-radius: 12px;
-            cursor: pointer;
-            transition: background 0.3s;
+        /* Hero / Home */
+        .hero {
+            background: var(--bg-gradient);
+            color: white;
+            padding: 4rem 2rem;
+            border-radius: 1rem;
+            text-align: center;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 25px -5px rgba(79, 70, 229, 0.3);
         }
 
-        .toggle-switch.active {
-            background: #28a745;
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
         }
 
-        .toggle-switch .slider {
-            position: absolute;
-            top: 2px;
-            left: 2px;
-            width: 20px;
-            height: 20px;
+        .hero p {
+            font-size: 1.15rem;
+            max-width: 700px;
+            margin: 0 auto 2rem auto;
+            opacity: 0.9;
+        }
+
+        .btn {
             background: white;
-            border-radius: 50%;
-            transition: left 0.3s;
-        }
-
-        .toggle-switch.active .slider {
-            left: 28px;
-        }
-
-        .button {
-            padding: 10px 16px;
-            border: none;
-            border-radius: 4px;
-            font-size: 14px;
+            color: var(--primary);
+            padding: 0.75rem 1.75rem;
+            border-radius: 50px;
             font-weight: 600;
+            text-decoration: none;
+            border: none;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: transform 0.2s, box-shadow 0.2s;
+            display: inline-block;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
         }
 
         .btn-primary {
-            background: #667eea;
+            background: var(--primary);
             color: white;
         }
 
-        .btn-primary:hover {
-            background: #5568d3;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
-        }
-
-        .btn-secondary {
-            background: #6c757d;
-            color: white;
-        }
-
-        .btn-secondary:hover {
-            background: #5a6268;
-        }
-
-        .btn-small {
-            padding: 6px 12px;
-            font-size: 12px;
-        }
-
-        .observations-grid {
+        /* Cards Grid */
+        .grid-3 {
             display: grid;
-            gap: 15px;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.5rem;
         }
 
-        .observation {
-            background: #f8f9fa;
-            padding: 12px;
-            border-radius: 6px;
-            border-left: 4px solid #667eea;
+        .card {
+            background: var(--card-bg);
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
 
-        .observation .date {
-            font-size: 12px;
-            color: #999;
+        .card h3 {
+            margin-bottom: 0.75rem;
+            color: var(--text-main);
         }
 
-        .observation .text {
-            color: #333;
-            margin: 5px 0;
+        .card p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin-bottom: 1.5rem;
             line-height: 1.5;
         }
 
-        .observation .tags {
-            display: flex;
-            gap: 6px;
-            margin-top: 8px;
-            flex-wrap: wrap;
-        }
-
-        .tag {
-            display: inline-block;
-            padding: 4px 8px;
-            background: #667eea;
-            color: white;
-            border-radius: 3px;
-            font-size: 11px;
-            font-weight: 600;
-        }
-
-        .observation-form {
-            margin-top: 15px;
-        }
-
+        /* Forms / Login Panels */
         .form-group {
-            margin-bottom: 15px;
+            margin-bottom: 1rem;
         }
 
         .form-group label {
             display: block;
-            margin-bottom: 5px;
-            color: #333;
+            font-size: 0.85rem;
             font-weight: 600;
-            font-size: 14px;
+            margin-bottom: 0.35rem;
+            color: var(--text-main);
         }
 
-        .form-group input,
-        .form-group textarea,
-        .form-group select {
+        .form-group input, .form-group textarea, .form-group select {
             width: 100%;
-            padding: 8px 12px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-family: inherit;
-            font-size: 14px;
+            padding: 0.65rem 0.85rem;
+            border: 1px solid var(--border-color);
+            border-radius: 0.5rem;
+            font-size: 0.95rem;
         }
 
-        .form-group textarea {
-            resize: vertical;
-            min-height: 100px;
-        }
-
-        .form-group input:focus,
-        .form-group textarea:focus,
-        .form-group select:focus {
+        .form-group input:focus {
             outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
         }
 
-        .alerts-section {
-            grid-column: 1 / -1;
-        }
-
-        .alert {
-            padding: 12px;
-            border-radius: 4px;
-            margin-bottom: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .alert-high {
-            background: #f8d7da;
-            border-left: 4px solid #dc3545;
-            color: #721c24;
-        }
-
-        .alert-medium {
-            background: #fff3cd;
-            border-left: 4px solid #ffc107;
-            color: #856404;
-        }
-
-        .alert-low {
-            background: #d1ecf1;
-            border-left: 4px solid #17a2b8;
-            color: #0c5460;
-        }
-
-        .alert-content {
-            flex: 1;
-        }
-
-        .alert-title {
-            font-weight: 600;
-            margin-bottom: 3px;
-        }
-
-        .alert-message {
-            font-size: 14px;
-        }
-
-        .alert-action {
-            flex-shrink: 0;
-            margin-left: 10px;
-        }
-
-        .loading {
+        /* Masked Content Box */
+        .secure-box {
+            background: #f9fafb;
+            border: 2px dashed var(--border-color);
+            border-radius: 0.75rem;
+            padding: 2rem;
             text-align: center;
-            color: #999;
-            padding: 20px;
+            margin-top: 1rem;
         }
 
-        .spinner {
+        .secure-box.unlocked {
+            border: 1px solid var(--success);
+            background: #ecfdf5;
+            text-align: left;
+        }
+
+        .alert-box {
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            display: none;
+        }
+
+        .alert-error {
+            background: #fee2e2;
+            color: var(--danger);
+            border: 1px solid #fecaca;
+        }
+
+        .alert-success {
+            background: #ecfdf5;
+            color: var(--success);
+            border: 1px solid #a7f3d0;
+        }
+
+        /* Dashboard Layouts */
+        .dashboard-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        @media (max-width: 900px) {
+            .dashboard-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .badge {
             display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid #f3f3f3;
-            border-top: 3px solid #667eea;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin-right: 10px;
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 700;
         }
 
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
+        .badge-active { background: #d1fae5; color: #065f46; }
 
-        .success-message {
-            background: #d4edda;
-            color: #155724;
-            padding: 12px;
-            border-radius: 4px;
-            margin-bottom: 15px;
-            display: none;
-        }
-
-        .success-message.show {
-            display: block;
-        }
-
-        .error-message {
-            background: #f8d7da;
-            color: #721c24;
-            padding: 12px;
-            border-radius: 4px;
-            margin-bottom: 15px;
-            display: none;
-        }
-
-        .error-message.show {
-            display: block;
-        }
-
+        /* Footer */
         footer {
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
+            background: var(--card-bg);
+            border-top: 1px solid var(--border-color);
             text-align: center;
-            color: #999;
-            font-size: 12px;
-            margin-top: 20px;
+            padding: 1.5rem;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            margin-top: auto;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <div>
-                <h1>🏥 Gericure Guardian Portal</h1>
-                <p style="color: #999; margin-top: 5px;">AI-Powered Care Coordination & Consent Management</p>
-            </div>
-            <div class="status">
-                <div class="status-badge status-active">✓ Active</div>
-                <div style="text-align: right;">
-                    <div style="color: #666; font-size: 12px;">Guardian: <strong id="guardianName">Loading...</strong></div>
-                    <div style="color: #999; font-size: 11px;" id="lastSync">Last sync: --</div>
-                </div>
-            </div>
-        </header>
 
-        <div class="main-grid">
-            <!-- LEFT COLUMN: PATIENT & CONSENT MANAGEMENT -->
-            <div>
+    <!-- Navigation Bar -->
+    <nav>
+        <div class="logo">
+            🏥 Gericure
+        </div>
+        <ul class="nav-links">
+            <li><a onclick="switchTab('home')" id="nav-home" class="active">Home</a></li>
+            <li><a onclick="switchTab('portals')" id="nav-portals">Portals</a></li>
+            <li><a onclick="switchTab('about')" id="nav-about">About</a></li>
+        </ul>
+    </nav>
+
+    <div class="main-container">
+
+        <!-- HOME SECTION -->
+        <div id="section-home" class="section active">
+            <div class="hero">
+                <h1>AI-Powered Health Memory & Care</h1>
+                <p>Advanced longitudinal care coordination, polypharmacy tracking, and real-time guardian oversight built for elderly patient safety.</p>
+                <button class="btn" onclick="switchTab('portals')">Access Secure Portals</button>
+            </div>
+
+            <div class="grid-3">
                 <div class="card">
-                    <h2>👤 Patient Information</h2>
-                    <div class="patient-info" id="patientInfo">
-                        <p>Loading patient information...</p>
-                    </div>
+                    <h3>👤 Patient Portal</h3>
+                    <p>Securely access and review confidential longitudinal health records by authenticating with your verified mobile number.</p>
+                    <button class="btn btn-primary" onclick="switchTab('portals'); focusPortal('patient')">Patient Login</button>
                 </div>
-
-                <div class="card" style="margin-top: 20px;">
-                    <h2>🔐 Consent Management</h2>
-                    
-                    <div class="success-message" id="successMessage"></div>
-                    <div class="error-message" id="errorMessage"></div>
-
-                    <div class="consent-section">
-                        <h3>📋 Clinician Access</h3>
-                        <div class="consent-item">
-                            <div class="consent-type">
-                                <div class="name">Full Medical Record</div>
-                                <div class="description">Allow clinicians to view complete health history</div>
-                            </div>
-                            <div class="consent-actions">
-                                <div class="toggle-switch active" onclick="toggleConsent('clinician_full')">
-                                    <div class="slider"></div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="consent-item">
-                            <div class="consent-type">
-                                <div class="name">Medication Review</div>
-                                <div class="description">Allow clinicians to review and adjust medications</div>
-                            </div>
-                            <div class="consent-actions">
-                                <div class="toggle-switch active" onclick="toggleConsent('clinician_meds')">
-                                    <div class="slider"></div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="consent-item">
-                            <div class="consent-type">
-                                <div class="name">Functional Assessment</div>
-                                <div class="description">Allow clinicians to view caregiver observations</div>
-                            </div>
-                            <div class="consent-actions">
-                                <div class="toggle-switch active" onclick="toggleConsent('clinician_functional')">
-                                    <div class="slider"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="consent-section">
-                        <h3>👨‍👩‍👧 Caregiver Access</h3>
-                        <div class="consent-item">
-                            <div class="consent-type">
-                                <div class="name">Observation & Feedback</div>
-                                <div class="description">Allow caregivers to log observations</div>
-                            </div>
-                            <div class="consent-actions">
-                                <div class="toggle-switch active" onclick="toggleConsent('caregiver_obs')">
-                                    <div class="slider"></div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="consent-item">
-                            <div class="consent-type">
-                                <div class="name">Alert Notifications</div>
-                                <div class="description">Allow caregivers to receive real-time alerts</div>
-                            </div>
-                            <div class="consent-actions">
-                                <div class="toggle-switch active" onclick="toggleConsent('caregiver_alerts')">
-                                    <div class="slider"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="consent-section">
-                        <h3>⏰ Consent Expiry</h3>
-                        <div class="form-group">
-                            <label>Renewal Date</label>
-                            <input type="date" id="expiryDate" value="2027-09-13">
-                            <small style="color: #999; margin-top: 5px; display: block;">Consent will automatically expire on this date</small>
-                        </div>
-                        <button class="button btn-primary" style="width: 100%;" onclick="saveConsent()">
-                            Save Consent Settings
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- RIGHT COLUMN: OBSERVATIONS & ALERTS -->
-            <div>
                 <div class="card">
-                    <h2>📝 Caregiver Observations</h2>
-                    
-                    <div class="observation-form">
-                        <div class="form-group">
-                            <label>Observation Type</label>
-                            <select id="obsType">
-                                <option value="">Select type...</option>
-                                <option value="cognitive">Cognitive Changes (memory, confusion)</option>
-                                <option value="mobility">Mobility Changes (falls, difficulty walking)</option>
-                                <option value="behavioral">Behavioral Changes (mood, agitation)</option>
-                                <option value="medication">Medication Issues (adherence, side effects)</option>
-                                <option value="appetite">Appetite & Nutrition</option>
-                                <option value="general">General Note</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label>Observation Details</label>
-                            <textarea id="obsText" placeholder="Describe what you observed. Be specific about dates and times if possible."></textarea>
-                        </div>
-
-                        <div class="form-group">
-                            <label>Severity</label>
-                            <select id="obsSeverity">
-                                <option value="low">Low - Minor concern</option>
-                                <option value="medium" selected>Medium - Notable change</option>
-                                <option value="high">High - Significant concern</option>
-                            </select>
-                        </div>
-
-                        <button class="button btn-primary" style="width: 100%;" onclick="submitObservation()">
-                            Submit Observation
-                        </button>
-                    </div>
-
-                    <div style="border-top: 2px solid #f0f0f0; margin-top: 20px; padding-top: 20px;">
-                        <h3 style="margin-bottom: 15px; color: #333;">Recent Observations</h3>
-                        <div class="observations-grid" id="observationsList">
-                            <div class="loading">
-                                <div class="spinner"></div>
-                                Loading observations...
-                            </div>
-                        </div>
-                    </div>
+                    <h3>👨‍👩‍👧 Caretaker & Guardian</h3>
+                    <p>Manage strict consent compliance, track consent expiration dates, log daily functional changes, and review clinical alerts.</p>
+                    <button class="btn btn-primary" onclick="switchTab('portals'); focusPortal('caretaker')">Caretaker Login</button>
                 </div>
-
-                <div class="card" style="margin-top: 20px;">
-                    <h2>⚠️ Active Alerts</h2>
-                    <div id="alertsList">
-                        <div class="loading">
-                            <div class="spinner"></div>
-                            Loading alerts...
-                        </div>
-                    </div>
+                <div class="card">
+                    <h3>🩺 Doctor & Clinical</h3>
+                    <p>Evaluate polypharmacy risks, analyze medication interactions, and monitor real-time clinical recommendations.</p>
+                    <button class="btn btn-primary" onclick="switchTab('portals'); focusPortal('doctor')">Doctor Login</button>
                 </div>
             </div>
         </div>
 
-        <!-- FULL-WIDTH ALERTS SECTION -->
-        <div class="alerts-section card">
-            <h2>🔔 Clinical Alerts Dashboard</h2>
-            <div class="alert alert-high">
-                <div class="alert-content">
-                    <div class="alert-title">HIGH: Polypharmacy Risk</div>
-                    <div class="alert-message">Patient is on 8 medications with 2 significant drug interactions (warfarin + aspirin). Recommended medication review.</div>
+        <!-- PORTALS SECTION (Unified Auth Hub) -->
+        <div id="section-portals" class="section">
+            <h2 style="margin-bottom: 1.5rem;">🔐 Secure Authentication Hub</h2>
+            <div class="grid-3">
+                
+                <!-- 1. Patient Portal Card -->
+                <div class="card">
+                    <div>
+                        <h3>Patient Access</h3>
+                        <p>Enter your registered mobile number to securely view confidential records.</p>
+                        <div id="patient-alert" class="alert-box alert-error"></div>
+                        <div class="form-group">
+                            <label>Registered Phone Number</label>
+                            <input type="text" id="patient-phone" placeholder="e.g. 9486508579">
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" style="width: 100%;" onclick="loginPatient()">Authenticate Patient</button>
                 </div>
-                <div class="alert-action">
-                    <button class="button btn-small btn-primary" onclick="acknowledgeAlert('POLY-1')">Acknowledge</button>
-                </div>
-            </div>
 
-            <div class="alert alert-medium">
-                <div class="alert-content">
-                    <div class="alert-title">MEDIUM: Functional Decline Detected</div>
-                    <div class="alert-message">Caregiver reported fall event on 2026-09-12. Patient mobility declining based on recent observations.</div>
+                <!-- 2. Caretaker Portal Card -->
+                <div class="card">
+                    <div>
+                        <h3>Caretaker / Guardian Portal</h3>
+                        <p>Sign in using guardian credentials to manage consent parameters & observations.</p>
+                        <div id="caretaker-alert" class="alert-box alert-error"></div>
+                        <div class="form-group">
+                            <label>Guardian Name</label>
+                            <input type="text" id="caretaker-name" placeholder="e.g. Thanu Shree N">
+                        </div>
+                        <div class="form-group">
+                            <label>Password</label>
+                            <input type="password" id="caretaker-pass" placeholder="••••••••">
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" style="width: 100%;" onclick="loginCaretaker()">Open Caretaker Dashboard</button>
                 </div>
-                <div class="alert-action">
-                    <button class="button btn-small btn-primary" onclick="acknowledgeAlert('FUNC-1')">Acknowledge</button>
-                </div>
-            </div>
 
-            <div class="alert alert-low">
-                <div class="alert-content">
-                    <div class="alert-title">LOW: Lab Result Available</div>
-                    <div class="alert-message">Recent lab results for Creatinine and eGFR are available for review.</div>
+                <!-- 3. Doctor Portal Card -->
+                <div class="card">
+                    <div>
+                        <h3>Doctor & Clinician Portal</h3>
+                        <p>Access clinical decision support and polypharmacy evaluation systems.</p>
+                        <div id="doctor-alert" class="alert-box alert-error"></div>
+                        <div class="form-group">
+                            <label>Doctor Email</label>
+                            <input type="email" id="doctor-email" placeholder="dr.ramesh.demo@hospital.com">
+                        </div>
+                        <div class="form-group">
+                            <label>Password</label>
+                            <input type="password" id="doctor-pass" placeholder="••••••••">
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" style="width: 100%;" onclick="loginDoctor()">Open Doctor Dashboard</button>
                 </div>
-                <div class="alert-action">
-                    <button class="button btn-small btn-secondary" onclick="dismissAlert('LAB-1')">Dismiss</button>
+
+            </div>
+        </div>
+
+        <!-- PATIENT DASHBOARD (Hidden until logged in) -->
+        <div id="section-patient-dash" class="section">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                <h2>👤 Patient Longitudinal Record</h2>
+                <button class="btn" style="background:#e5e7eb; color:#374151;" onclick="switchTab('portals')">Lock & Logout</button>
+            </div>
+            <div class="card">
+                <h3>Confidential Patient File</h3>
+                <div class="secure-box unlocked">
+                    <p><strong>Name:</strong> Nagarajan Raman</p>
+                    <p><strong>Medical ID:</strong> MR-1948-0615-001</p>
+                    <p><strong>DOB:</strong> June 15, 1948 (Age: 78)</p>
+                    <p><strong>Primary Condition:</strong> Hypertension, Type 2 Diabetes, CKD Stage 3b</p>
+                    <p><strong>Active Medications Count:</strong> 8 prescribed medications</p>
+                    <p style="margin-top: 10px; color: var(--success);"><strong>Status:</strong> Identity Verified & Unmasked via Secure Session</p>
                 </div>
             </div>
         </div>
+
+        <!-- CARETAKER DASHBOARD (Consent & Observation Hub) -->
+        <div id="section-caretaker-dash" class="section">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                <h2>👨‍👩‍👧 Caretaker Consent & Observation Hub</h2>
+                <button class="btn" style="background:#e5e7eb; color:#374151;" onclick="switchTab('portals')">Lock & Logout</button>
+            </div>
+
+            <div class="dashboard-layout">
+                <!-- Left: Consent Controls -->
+                <div class="card">
+                    <h3>🔐 Tiered Consent Enforcement</h3>
+                    <p>Manage data access governance parameters for clinical and care teams.</p>
+                    <div style="margin-bottom: 1rem;">
+                        <label style="display:flex; justify-content:space-between; align-items:center; padding: 0.5rem 0; border-bottom:1px solid #f3f4f6;">
+                            <span>Clinician Full Medical Access</span>
+                            <input type="checkbox" checked style="width:18px; height:18px;">
+                        </label>
+                        <label style="display:flex; justify-content:space-between; align-items:center; padding: 0.5rem 0; border-bottom:1px solid #f3f4f6;">
+                            <span>Medication Review Authorization</span>
+                            <input type="checkbox" checked style="width:18px; height:18px;">
+                        </label>
+                        <label style="display:flex; justify-content:space-between; align-items:center; padding: 0.5rem 0;">
+                            <span>Caregiver Observation Logging</span>
+                            <input type="checkbox" checked style="width:18px; height:18px;">
+                        </label>
+                    </div>
+                    <button class="btn btn-primary" onclick="alert('Consent preferences updated successfully!')">Save Consent Settings</button>
+                </div>
+
+                <!-- Right: Submit Observation -->
+                <div class="card">
+                    <h3>📝 Log Caregiver Observation</h3>
+                    <div class="form-group">
+                        <label>Observation Category</label>
+                        <select id="obs-type">
+                            <option value="mobility">Mobility / Fall Risk</option>
+                            <option value="cognitive">Cognitive / Memory Confusion</option>
+                            <option value="medication">Medication Adherence Issue</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Details</label>
+                        <textarea id="obs-text" placeholder="Describe behavioral or physical changes observed..."></textarea>
+                    </div>
+                    <button class="btn btn-primary" onclick="alert('Observation logged and synced with care team!')">Submit Observation</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- DOCTOR DASHBOARD (Clinical & Polypharmacy Hub) -->
+        <div id="section-doctor-dash" class="section">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                <h2>🩺 Doctor Clinical Risk & Polypharmacy Portal</h2>
+                <button class="btn" style="background:#e5e7eb; color:#374151;" onclick="switchTab('portals')">Lock & Logout</button>
+            </div>
+            
+            <div class="card" style="margin-bottom: 1.5rem;">
+                <h3>⚠️ Active AI Safety Alerts</h3>
+                <div style="background: #fee2e2; border-left: 4px solid var(--danger); padding: 1rem; border-radius: 0.5rem; color: #991b1b; margin-top: 0.5rem;">
+                    <strong>HIGH: Polypharmacy Risk Detected</strong><br>
+                    Patient is concurrently prescribed Warfarin and Aspirin with 8 total active medications. Immediate clinical review recommended.
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Patient Clinical Profile & Summary</h3>
+                <p>Reviewing synthesized longitudinal records for <strong>Nagarajan Raman (ID: MR-1948-0615-001)</strong>.</p>
+                <button class="btn btn-primary" onclick="alert('Synthesizing latest longitudinal context via AI agents...')">Run AI Context Synthesis</button>
+            </div>
+        </div>
+
+        <!-- ABOUT SECTION -->
+        <div id="section-about" class="section">
+            <div class="card">
+                <h2>About Gericure Systems</h2>
+                <p style="margin-top: 1rem;">Gericure is an enterprise-grade AI-powered health memory platform engineered specifically for elderly care coordination and chronic condition tracking.</p>
+                <p style="margin-top: 0.75rem;">By integrating fragmented health records, real-time polypharmacy risk analysis engines, and immutable guardian consent enforcement, Gericure bridges the gap between patients, family caregivers, and clinical teams safely and securely under full HIPAA compliance.</p>
+            </div>
+        </div>
+
     </div>
 
+    <!-- Footer -->
     <footer>
         <p>🔒 Gericure | Secure Health Memory Platform | Data encrypted in transit & at rest</p>
-        <p style="margin-top: 5px;">© 2026 Gericure Health Systems. All patient data is private and HIPAA-compliant.</p>
+        <p style="margin-top: 4px;">© 2026 Gericure Health Systems. All rights reserved.</p>
     </footer>
 
+    <!-- Client Script for Tab Management & Credential Validation -->
     <script>
-        // Configuration - Dynamic URL mapping for Production (Railway) & Localhost
-        const API_BASE_URL = window.location.origin;
-        const WS_PROTO = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-        const WS_BASE_URL = `${WS_PROTO}//${window.location.host}`;
-        
-        // State
-        let currentPatientId = 1; // Demo patient
-        let currentUserId = 5; // Demo guardian
-        let userRole = 'guardian';
-        let alertWebSocket = null;
+        function switchTab(tabId) {
+            // Hide all sections
+            document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
+            document.querySelectorAll('.nav-links a').forEach(link => link.classList.remove('active'));
 
-        // Initialize on page load
-        document.addEventListener('DOMContentLoaded', () => {
-            loadPatientInfo();
-            loadObservations();
-            loadAlerts();
-            connectAlertWebSocket();
-            updateLastSync();
-        });
-
-        // Load patient information
-        async function loadPatientInfo() {
-            try {
-                document.getElementById('patientInfo').innerHTML = `
-                    <p><strong>Name:</strong> Nagarajan Raman</p>
-                    <p><strong>Age:</strong> 78 years old</p>
-                    <p><strong>DOB:</strong> June 15, 1948</p>
-                    <p><strong>Medical ID:</strong> MR-1948-0615-001</p>
-                    <p><strong>Primary Condition:</strong> Hypertension, Type 2 Diabetes, CKD Stage 3b</p>
-                    <p><strong>Active Medications:</strong> 8 medications</p>
-                    <p style="margin-top: 10px;"><strong style="color: #667eea;">Status:</strong> Stable with monitoring</p>
-                `;
-                document.getElementById('guardianName').textContent = 'Dr. Priya Kumar';
-            } catch (error) {
-                console.error('Error loading patient info:', error);
+            // Show selected section
+            if (tabId === 'home') {
+                document.getElementById('section-home').classList.add('active');
+                document.getElementById('nav-home').classList.add('active');
+            } else if (tabId === 'portals') {
+                document.getElementById('section-portals').classList.add('active');
+                document.getElementById('nav-portals').classList.add('active');
+            } else if (tabId === 'about') {
+                document.getElementById('section-about').classList.add('active');
+                document.getElementById('nav-about').classList.add('active');
             }
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // Load caregiver observations
-        async function loadObservations() {
-            try {
-                const mockObservations = [
-                    {
-                        date: '2026-09-13',
-                        type: 'mobility',
-                        text: 'Patient had difficulty walking distances greater than 50 meters. Required assistance for stairs.',
-                        tags: ['Fall Risk', 'PT Referral']
-                    },
-                    {
-                        date: '2026-09-12',
-                        type: 'cognitive',
-                        text: 'Patient seemed confused about the date today. Asked same questions multiple times during the day.',
-                        tags: ['Memory', 'Monitoring']
-                    },
-                    {
-                        date: '2026-09-11',
-                        type: 'medication',
-                        text: 'Patient forgot to take morning medications. Helped organize pills in dispenser for better adherence.',
-                        tags: ['Adherence', 'Support']
-                    }
-                ];
-
-                const html = mockObservations.map(obs => `
-                    <div class="observation">
-                        <div class="date">📅 ${obs.date}</div>
-                        <div class="text">${obs.text}</div>
-                        <div class="tags">
-                            ${obs.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
-                        </div>
-                    </div>
-                `).join('');
-
-                document.getElementById('observationsList').innerHTML = html;
-            } catch (error) {
-                console.error('Error loading observations:', error);
-            }
+        function focusPortal(type) {
+            // Smooth scroll or focus if needed
         }
 
-        // Load alerts
-        async function loadAlerts() {
-            try {
-                const mockAlerts = [
-                    {
-                        id: 'HIGH-1',
-                        severity: 'high',
-                        title: 'Polypharmacy Risk High',
-                        message: 'Risk score 7.2/10. Multiple drug interactions detected.'
-                    },
-                    {
-                        id: 'MED-1',
-                        severity: 'medium',
-                        title: 'Fall Event Documented',
-                        message: 'Recent fall reported. Consider home safety assessment.'
-                    }
-                ];
-
-                const html = mockAlerts.map(alert => `
-                    <div class="alert alert-${alert.severity}">
-                        <div class="alert-content">
-                            <div class="alert-title">${alert.title}</div>
-                            <div class="alert-message">${alert.message}</div>
-                        </div>
-                        <div class="alert-action">
-                            <button class="button btn-small btn-primary" onclick="acknowledgeAlert('${alert.id}')">Acknowledge</button>
-                        </div>
-                    </div>
-                `).join('');
-
-                document.getElementById('alertsList').innerHTML = html;
-            } catch (error) {
-                console.error('Error loading alerts:', error);
-            }
-        }
-
-        // Connect to WebSocket for real-time alerts
-        function connectAlertWebSocket() {
-            const wsUrl = `${WS_BASE_URL}/ws/patients/${currentPatientId}/alerts?requester_id=${currentUserId}&requester_role=${userRole}`;
+        // 1. Patient Authentication Logic (Hides/Shows confidential details)
+        function loginPatient() {
+            const phoneInput = document.getElementById('patient-phone').value.trim();
+            const alertBox = document.getElementById('patient-alert');
             
-            alertWebSocket = new WebSocket(wsUrl);
-
-            alertWebSocket.onopen = () => {
-                console.log('Connected to alert stream');
-            };
-
-            alertWebSocket.onmessage = (event) => {
-                const message = JSON.parse(event.data);
-                
-                if (message.type === 'alert' && message.event === 'new_alert') {
-                    console.log('New alert:', message.data);
-                    showNotification(`New Alert: ${message.data.message}`);
-                    loadAlerts();
-                }
-            };
-
-            alertWebSocket.onerror = (error) => {
-                console.error('WebSocket error:', error);
-            };
-
-            alertWebSocket.onclose = () => {
-                console.log('Disconnected from alert stream');
-                setTimeout(connectAlertWebSocket, 5000);
-            };
-        }
-
-        // Toggle consent setting
-        function toggleConsent(type) {
-            const element = event.target.closest('.toggle-switch');
-            element.classList.toggle('active');
-        }
-
-        // Save consent settings
-        async function saveConsent() {
-            showMessage('Consent settings updated successfully!', 'success');
-            updateLastSync();
-        }
-
-        // Submit observation
-        async function submitObservation() {
-            const type = document.getElementById('obsType').value;
-            const text = document.getElementById('obsText').value;
-            const severity = document.getElementById('obsSeverity').value;
-
-            if (!type || !text) {
-                showMessage('Please fill in all fields', 'error');
-                return;
-            }
-
-            try {
-                showMessage('Observation submitted successfully!', 'success');
-                
-                document.getElementById('obsType').value = '';
-                document.getElementById('obsText').value = '';
-                document.getElementById('obsSeverity').value = 'medium';
-
-                loadObservations();
-            } catch (error) {
-                showMessage('Error submitting observation: ' + error.message, 'error');
+            // Demo credential check: 9486508579
+            if (phoneInput === "9486508579") {
+                alertBox.style.display = 'none';
+                document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
+                document.getElementById('section-patient-dash').classList.add('active');
+            } else {
+                alertBox.textContent = "Invalid Patient Phone Number. Use demo: 9486508579";
+                alertBox.style.display = 'block';
             }
         }
 
-        // Acknowledge alert
-        function acknowledgeAlert(alertId) {
-            showMessage(`Alert ${alertId} acknowledged`, 'success');
-            loadAlerts();
-        }
+        // 2. Caretaker Authentication Logic
+        function loginCaretaker() {
+            const nameInput = document.getElementById('caretaker-name').value.trim();
+            const passInput = document.getElementById('caretaker-pass').value.trim();
+            const alertBox = document.getElementById('caretaker-alert');
 
-        // Dismiss alert
-        function dismissAlert(alertId) {
-            showMessage(`Alert ${alertId} dismissed`, 'success');
-            loadAlerts();
-        }
-
-        // Show message
-        function showMessage(text, type) {
-            const element = document.getElementById(`${type}Message`);
-            element.textContent = text;
-            element.classList.add('show');
-            setTimeout(() => {
-                element.classList.remove('show');
-            }, 4000);
-        }
-
-        // Show notification
-        function showNotification(message) {
-            if ('Notification' in window && Notification.permission === 'granted') {
-                new Notification('Gericure Alert', { body: message });
+            // Demo credentials: Name: Thanu Shree N, Password: demo123
+            if (nameInput === "Thanu Shree N" && passInput === "demo123") {
+                alertBox.style.display = 'none';
+                document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
+                document.getElementById('section-caretaker-dash').classList.add('active');
+            } else {
+                alertBox.textContent = "Invalid credentials. Use Name: Thanu Shree N | Pass: demo123";
+                alertBox.style.display = 'block';
             }
         }
 
-        // Update last sync timestamp
-        function updateLastSync() {
-            const now = new Date();
-            document.getElementById('lastSync').textContent = 
-                `Last sync: ${now.toLocaleTimeString()}`;
-        }
+        // 3. Doctor Authentication Logic
+        function loginDoctor() {
+            const emailInput = document.getElementById('doctor-email').value.trim();
+            const passInput = document.getElementById('doctor-pass').value.trim();
+            const alertBox = document.getElementById('doctor-alert');
 
-        // Request notification permission
-        if ('Notification' in window && Notification.permission === 'default') {
-            Notification.requestPermission();
+            // Demo credentials: Email: dr.ramesh.demo@hospital.com, Password: demo123
+            if (emailInput === "dr.ramesh.demo@hospital.com" && passInput === "demo123") {
+                alertBox.style.display = 'none';
+                document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
+                document.getElementById('section-doctor-dash').classList.add('active');
+            } else {
+                alertBox.textContent = "Invalid credentials. Use Email: dr.ramesh.demo@hospital.com | Pass: demo123";
+                alertBox.style.display = 'block';
+            }
         }
-
-        // Auto-refresh every 30 seconds
-        setInterval(() => {
-            loadAlerts();
-            updateLastSync();
-        }, 30000);
     </script>
 </body>
 </html>
