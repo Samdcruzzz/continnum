@@ -712,8 +712,11 @@
   </div>
 
   <script>
+    // Configuration - Automatically maps to live Railway domain or localhost
+    const API_BASE_URL = window.location.origin;
+
     // ======================================================
-    // SEEDED DATA
+    // SEEDED DATA (Example fetch usage pattern with API_BASE_URL)
     // ======================================================
     const seedData = {
       doctor: {
@@ -1057,7 +1060,7 @@
                 ${seedData.medicines.filter(m => m.isCurrent).map(med => `
                   <div class="bg-green-50 border border-green-200 rounded-lg p-2">
                     <p class="font-medium text-slate-900 text-xs">${med.name}</p>
-                    <p class="text-[10px] text-slate-600">${med.dosage} • ${med.frequency}</p>
+                    <p class="text-[10px] text-slate-600">${med.dosage} •${med.frequency}</p>
                     <p class="text-slate-700 text-[10px] mt-1 leading-snug">${med.note}</p>
                   </div>
                 `).join('')}
