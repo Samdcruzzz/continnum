@@ -16,6 +16,7 @@
             --border-color: #e5e7eb;
             --success: #10b981;
             --danger: #ef4444;
+            --warning: #f59e0b;
         }
 
         * {
@@ -33,7 +34,7 @@
             flex-direction: column;
         }
 
-        /* Navbar */
+        /* Navigation Bar */
         nav {
             background: var(--card-bg);
             box-shadow: 0 1px 3px rgba(0,0,0,0.1);
@@ -75,7 +76,7 @@
 
         /* Main Container */
         .main-container {
-            max-width: 1200px;
+            max-width: 1280px;
             margin: 2rem auto;
             padding: 0 1rem;
             flex: 1;
@@ -199,22 +200,6 @@
             box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
         }
 
-        /* Masked Content Box */
-        .secure-box {
-            background: #f9fafb;
-            border: 2px dashed var(--border-color);
-            border-radius: 0.75rem;
-            padding: 2rem;
-            text-align: center;
-            margin-top: 1rem;
-        }
-
-        .secure-box.unlocked {
-            border: 1px solid var(--success);
-            background: #ecfdf5;
-            text-align: left;
-        }
-
         .alert-box {
             padding: 0.75rem 1rem;
             border-radius: 0.5rem;
@@ -229,34 +214,77 @@
             border: 1px solid #fecaca;
         }
 
-        .alert-success {
-            background: #ecfdf5;
-            color: var(--success);
-            border: 1px solid #a7f3d0;
+        /* Dashboard Advanced Styles */
+        .dash-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            background: var(--card-bg);
+            padding: 1.25rem 2rem;
+            border-radius: 1rem;
+            border: 1px solid var(--border-color);
         }
 
-        /* Dashboard Layouts */
-        .dashboard-layout {
+        .dashboard-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: repeat(2, 1fr);
             gap: 1.5rem;
         }
 
         @media (max-width: 900px) {
-            .dashboard-layout {
+            .dashboard-grid {
                 grid-template-columns: 1fr;
             }
         }
 
-        .badge {
-            display: inline-block;
-            padding: 0.25rem 0.75rem;
-            border-radius: 50px;
-            font-size: 0.75rem;
-            font-weight: 700;
+        .full-width {
+            grid-column: span 2;
         }
 
-        .badge-active { background: #d1fae5; color: #065f46; }
+        @media (max-width: 900px) {
+            .full-width { grid-column: span 1; }
+        }
+
+        .info-pill {
+            background: #f8fafc;
+            border: 1px solid var(--border-color);
+            padding: 0.85rem 1rem;
+            border-radius: 0.5rem;
+            margin-bottom: 0.75rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 0.5rem;
+        }
+
+        th, td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 0.9rem;
+        }
+
+        th {
+            background: #f9fafb;
+            color: var(--text-main);
+            font-weight: 600;
+        }
+
+        .tag {
+            padding: 0.2rem 0.6rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        .tag-danger { background: #fee2e2; color: var(--danger); }
+        .tag-success { background: #d1fae5; color: var(--success); }
+        .tag-warning { background: #fef3c7; color: #d97706; }
 
         /* Footer */
         footer {
@@ -297,18 +325,18 @@
             <div class="grid-3">
                 <div class="card">
                     <h3>👤 Patient Portal</h3>
-                    <p>Securely access and review confidential longitudinal health records by authenticating with your verified mobile number.</p>
-                    <button class="btn btn-primary" onclick="switchTab('portals'); focusPortal('patient')">Patient Login</button>
+                    <p>Securely access confidential longitudinal health records, vital stats, and prescribed medications using your verified mobile number.</p>
+                    <button class="btn btn-primary" onclick="switchTab('portals')">Patient Login</button>
                 </div>
                 <div class="card">
                     <h3>👨‍👩‍👧 Caretaker & Guardian</h3>
-                    <p>Manage strict consent compliance, track consent expiration dates, log daily functional changes, and review clinical alerts.</p>
-                    <button class="btn btn-primary" onclick="switchTab('portals'); focusPortal('caretaker')">Caretaker Login</button>
+                    <p>Manage strict consent compliance, track expiration dates, log daily functional changes, and review clinical alerts.</p>
+                    <button class="btn btn-primary" onclick="switchTab('portals')">Caretaker Login</button>
                 </div>
                 <div class="card">
                     <h3>🩺 Doctor & Clinical</h3>
-                    <p>Evaluate polypharmacy risks, analyze medication interactions, and monitor real-time clinical recommendations.</p>
-                    <button class="btn btn-primary" onclick="switchTab('portals'); focusPortal('doctor')">Doctor Login</button>
+                    <p>Evaluate comprehensive patient history, analyze polypharmacy risks, check drug interactions, and write clinical notes.</p>
+                    <button class="btn btn-primary" onclick="switchTab('portals')">Doctor Login</button>
                 </div>
             </div>
         </div>
@@ -325,7 +353,7 @@
                         <p>Enter your registered mobile number to securely view confidential records.</p>
                         <div id="patient-alert" class="alert-box alert-error"></div>
                         <div class="form-group">
-                            <label>Registered Phone Number</label>
+                            <label>Registered Phone Number (Demo: 9486508579)</label>
                             <input type="text" id="patient-phone" placeholder="e.g. 9486508579">
                         </div>
                     </div>
@@ -339,11 +367,11 @@
                         <p>Sign in using guardian credentials to manage consent parameters & observations.</p>
                         <div id="caretaker-alert" class="alert-box alert-error"></div>
                         <div class="form-group">
-                            <label>Guardian Name</label>
+                            <label>Guardian Name (Demo: Thanu Shree N)</label>
                             <input type="text" id="caretaker-name" placeholder="e.g. Thanu Shree N">
                         </div>
                         <div class="form-group">
-                            <label>Password</label>
+                            <label>Password (Demo: demo123)</label>
                             <input type="password" id="caretaker-pass" placeholder="••••••••">
                         </div>
                     </div>
@@ -354,14 +382,14 @@
                 <div class="card">
                     <div>
                         <h3>Doctor & Clinician Portal</h3>
-                        <p>Access clinical decision support and polypharmacy evaluation systems.</p>
+                        <p>Access clinical decision support and prescription systems.</p>
                         <div id="doctor-alert" class="alert-box alert-error"></div>
                         <div class="form-group">
-                            <label>Doctor Email</label>
+                            <label>Doctor Email (Demo: dr.ramesh.demo@hospital.com)</label>
                             <input type="email" id="doctor-email" placeholder="dr.ramesh.demo@hospital.com">
                         </div>
                         <div class="form-group">
-                            <label>Password</label>
+                            <label>Password (Demo: demo123)</label>
                             <input type="password" id="doctor-pass" placeholder="••••••••">
                         </div>
                     </div>
@@ -371,48 +399,120 @@
             </div>
         </div>
 
-        <!-- PATIENT DASHBOARD (Hidden until logged in) -->
+        <!-- 👤 ADVANCED PATIENT DASHBOARD -->
         <div id="section-patient-dash" class="section">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-                <h2>👤 Patient Longitudinal Record</h2>
-                <button class="btn" style="background:#e5e7eb; color:#374151;" onclick="switchTab('portals')">Lock & Logout</button>
+            <div class="dash-header">
+                <div>
+                    <h2>👤 Patient Clinical Profile & Health Memory</h2>
+                    <p style="color: var(--text-muted); font-size: 0.9rem;">Welcome back, Nagarajan Raman</p>
+                </div>
+                <button class="btn" style="background:#e5e7eb; color:#374151;" onclick="switchTab('portals')">Secure Logout</button>
             </div>
-            <div class="card">
-                <h3>Confidential Patient File</h3>
-                <div class="secure-box unlocked">
-                    <p><strong>Name:</strong> Nagarajan Raman</p>
-                    <p><strong>Medical ID:</strong> MR-1948-0615-001</p>
-                    <p><strong>DOB:</strong> June 15, 1948 (Age: 78)</p>
-                    <p><strong>Primary Condition:</strong> Hypertension, Type 2 Diabetes, CKD Stage 3b</p>
-                    <p><strong>Active Medications Count:</strong> 8 prescribed medications</p>
-                    <p style="margin-top: 10px; color: var(--success);"><strong>Status:</strong> Identity Verified & Unmasked via Secure Session</p>
+
+            <div class="dashboard-grid">
+                <!-- Bio & Vitals Card -->
+                <div class="card">
+                    <h3>📋 Patient Bio & Vitals</h3>
+                    <div class="info-pill"><span>Full Name</span> <strong>Nagarajan Raman</strong></div>
+                    <div class="info-pill"><span>Age / DOB</span> <strong>78 Years (June 15, 1948)</strong>[cite: 3]</div>
+                    <div class="info-pill"><span>Medical ID</span> <strong>MR-1948-0615-001</strong>[cite: 3]</div>
+                    <div class="info-pill"><span>Blood Pressure</span> <strong style="color:var(--warning);">138/85 mmHg (Stage 1)</strong></div>
+                    <div class="info-pill"><span>Blood Glucose</span> <strong>142 mg/dL (Fasting)</strong></div>
+                    <div class="info-pill"><span>eGFR / Kidney Function</span> <strong style="color:var(--danger);">45 mL/min (CKD Stage 3b)</strong>[cite: 3]</div>
+                </div>
+
+                <!-- Chronic Conditions & History -->
+                <div class="card">
+                    <h3>🏥 Chronic Conditions & Past History</h3>
+                    <p>Longitudinal medical tracking managed by Gericure AI Orchestrator.</p>
+                    <div style="display:flex; flex-direction:column; gap:0.5rem;">
+                        <div style="background:#fef2f2; padding:0.75rem; border-radius:0.5rem; border:1px solid #fecaca;">
+                            <strong>Hypertension (Primary Diagnosis)</strong><br><small style="color:var(--text-muted);">Diagnosed 2012 | Controlled with monitoring</small>
+                        </div>
+                        <div style="background:#fef3c7; padding:0.75rem; border-radius:0.5rem; border:1px solid #fde68a;">
+                            <strong>Type 2 Diabetes Mellitus</strong><br><small style="color:var(--text-muted);">Diagnosed 2016 | HbA1c: 7.4%</small>
+                        </div>
+                        <div style="background:#e0f2fe; padding:0.75rem; border-radius:0.5rem; border:1px solid #bae6fd;">
+                            <strong>Chronic Kidney Disease (CKD Stage 3b)</strong><br><small style="color:var(--text-muted);">Monitored quarterly via serum creatinine</small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Active Medications Table (Full Width) -->
+                <div class="card full-width">
+                    <h3>💊 Active Prescriptions & Medications (8 Total)[cite: 3]</h3>
+                    <p>Current active pharmaceutical regimen prescribed across care networks.</p>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Medication Name</th>
+                                <th>Dosage</th>
+                                <th>Frequency</th>
+                                <th>Purpose</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Warfarin</strong></td>
+                                <td>5 mg</td>
+                                <td>Once daily</td>
+                                <td>Anticoagulant</td>
+                                <td><span class="tag tag-danger">High Alert</span></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Aspirin</strong></td>
+                                <td>75 mg</td>
+                                <td>Once daily</td>
+                                <td>Antiplatelet</td>
+                                <td><span class="tag tag-warning">Interaction Risk</span></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Metformin</strong></td>
+                                <td>500 mg</td>
+                                <td>Twice daily</td>
+                                <td>Blood Glucose Control</td>
+                                <td><span class="tag tag-success">Active</span></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Amlodipine</strong></td>
+                                <td>10 mg</td>
+                                <td>Once daily</td>
+                                <td>Blood Pressure</td>
+                                <td><span class="tag tag-success">Active</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
 
-        <!-- CARETAKER DASHBOARD (Consent & Observation Hub) -->
+        <!-- 👨‍👩‍👧 CARETAKER DASHBOARD -->
         <div id="section-caretaker-dash" class="section">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-                <h2>👨‍👩‍👧 Caretaker Consent & Observation Hub</h2>
-                <button class="btn" style="background:#e5e7eb; color:#374151;" onclick="switchTab('portals')">Lock & Logout</button>
+            <div class="dash-header">
+                <div>
+                    <h2>👨‍👩‍👧 Caretaker Consent & Observation Hub</h2>
+                    <p style="color: var(--text-muted); font-size: 0.9rem;">Guardian Oversight Portal</p>
+                </div>
+                <button class="btn" style="background:#e5e7eb; color:#374151;" onclick="switchTab('portals')">Secure Logout</button>
             </div>
 
-            <div class="dashboard-layout">
+            <div class="dashboard-grid">
                 <!-- Left: Consent Controls -->
                 <div class="card">
                     <h3>🔐 Tiered Consent Enforcement</h3>
                     <p>Manage data access governance parameters for clinical and care teams.</p>
                     <div style="margin-bottom: 1rem;">
-                        <label style="display:flex; justify-content:space-between; align-items:center; padding: 0.5rem 0; border-bottom:1px solid #f3f4f6;">
-                            <span>Clinician Full Medical Access</span>
+                        <label style="display:flex; justify-content:space-between; align-items:center; padding: 0.75rem 0; border-bottom:1px solid #f3f4f6;">
+                            <span>Clinician Full Medical Record Access</span>
                             <input type="checkbox" checked style="width:18px; height:18px;">
                         </label>
-                        <label style="display:flex; justify-content:space-between; align-items:center; padding: 0.5rem 0; border-bottom:1px solid #f3f4f6;">
-                            <span>Medication Review Authorization</span>
+                        <label style="display:flex; justify-content:space-between; align-items:center; padding: 0.75rem 0; border-bottom:1px solid #f3f4f6;">
+                            <span>Medication Review & Adjustment Rights</span>
                             <input type="checkbox" checked style="width:18px; height:18px;">
                         </label>
-                        <label style="display:flex; justify-content:space-between; align-items:center; padding: 0.5rem 0;">
-                            <span>Caregiver Observation Logging</span>
+                        <label style="display:flex; justify-content:space-between; align-items:center; padding: 0.75rem 0;">
+                            <span>Caregiver Functional Observation Logging</span>
                             <input type="checkbox" checked style="width:18px; height:18px;">
                         </label>
                     </div>
@@ -428,10 +528,11 @@
                             <option value="mobility">Mobility / Fall Risk</option>
                             <option value="cognitive">Cognitive / Memory Confusion</option>
                             <option value="medication">Medication Adherence Issue</option>
+                            <option value="appetite">Appetite & Nutrition Change</option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <label>Details</label>
+                        <label>Observation Details</label>
                         <textarea id="obs-text" placeholder="Describe behavioral or physical changes observed..."></textarea>
                     </div>
                     <button class="btn btn-primary" onclick="alert('Observation logged and synced with care team!')">Submit Observation</button>
@@ -439,25 +540,99 @@
             </div>
         </div>
 
-        <!-- DOCTOR DASHBOARD (Clinical & Polypharmacy Hub) -->
+        <!-- 🩺 ADVANCED DOCTOR DASHBOARD -->
         <div id="section-doctor-dash" class="section">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-                <h2>🩺 Doctor Clinical Risk & Polypharmacy Portal</h2>
-                <button class="btn" style="background:#e5e7eb; color:#374151;" onclick="switchTab('portals')">Lock & Logout</button>
-            </div>
-            
-            <div class="card" style="margin-bottom: 1.5rem;">
-                <h3>⚠️ Active AI Safety Alerts</h3>
-                <div style="background: #fee2e2; border-left: 4px solid var(--danger); padding: 1rem; border-radius: 0.5rem; color: #991b1b; margin-top: 0.5rem;">
-                    <strong>HIGH: Polypharmacy Risk Detected</strong><br>
-                    Patient is concurrently prescribed Warfarin and Aspirin with 8 total active medications. Immediate clinical review recommended.
+            <div class="dash-header">
+                <div>
+                    <h2>🩺 Doctor Clinical Decision Support & Prescription Hub</h2>
+                    <p style="color: var(--text-muted); font-size: 0.9rem;">LoggedIn: Dr. Ramesh (ID: DR-9021)</p>
                 </div>
+                <button class="btn" style="background:#e5e7eb; color:#374151;" onclick="switchTab('portals')">Secure Logout</button>
             </div>
 
-            <div class="card">
-                <h3>Patient Clinical Profile & Summary</h3>
-                <p>Reviewing synthesized longitudinal records for <strong>Nagarajan Raman (ID: MR-1948-0615-001)</strong>.</p>
-                <button class="btn btn-primary" onclick="alert('Synthesizing latest longitudinal context via AI agents...')">Run AI Context Synthesis</button>
+            <div class="dashboard-grid">
+                <!-- Polypharmacy Alert Card -->
+                <div class="card full-width" style="background: #fef2f2; border: 1px solid #fecaca;">
+                    <h3 style="color: var(--danger);">⚠️ High Polypharmacy & Drug Interaction Risk Detected</h3>
+                    <p style="color: #991b1b; margin-bottom: 1rem;">
+                        Patient Nagarajan Raman is concurrently taking <strong>Warfarin</strong> and <strong>Aspirin</strong> (Total 8 medications)[cite: 3]. 
+                        AI Polypharmacy Risk Score: <strong>7.2 / 10</strong>. High risk of major gastrointestinal bleeding or hemorrhage.
+                    </p>
+                    <div style="display:flex; gap:10px;">
+                        <button class="btn btn-primary" style="background:var(--danger);" onclick="alert('Modification recommendation sent to care coordinator.')">Modify Medication Regimen</button>
+                        <button class="btn" style="background:white; color:var(--text-main);" onclick="alert('Lab order for INR and eGFR initiated.')">Order Lab Work (INR / eGFR)</button>
+                    </div>
+                </div>
+
+                <!-- Patient Clinical History & Past Complications -->
+                <div class="card">
+                    <h3>📜 Patient Medical Background & Past Complications</h3>
+                    <div class="info-pill"><span>Target Patient</span> <strong>Nagarajan Raman (78 yrs)</strong>[cite: 3]</div>
+                    <div class="info-pill"><span>Past Surgeries</span> <strong>Coronary Stent Placement (2018)</strong></div>
+                    <div class="info-pill"><span>Allergies</span> <strong style="color:var(--danger);">Penicillin (Anaphylaxis risk)</strong></div>
+                    <div class="info-pill"><span>Fall Incidents (Past 6 mo)</span> <strong style="color:var(--warning);">1 minor fall reported on Sept 12</strong></div>
+                    <div class="info-pill"><span>Cognitive Assessment</span> <strong>MMSE Score: 24/30 (Mild Cognitive Decline)</strong></div>
+                </div>
+
+                <!-- Prescription & Treatment Management -->
+                <div class="card">
+                    <h3>✍️ New Prescription & Clinical Notes</h3>
+                    <p>Issue adjustments or add new clinical remarks to the health memory.</p>
+                    <div class="form-group">
+                        <label>Select Medication to Adjust/Prescribe</label>
+                        <select id="rx-med">
+                            <option value="warfarin">Warfarin (Adjust Dosage)</option>
+                            <option value="aspirin">Aspirin (Review / Discontinue)</option>
+                            <option value="metformin">Metformin (Maintain)</option>
+                            <option value="amlodipine">Amlodipine (Maintain)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Clinical Instruction / Notes</label>
+                        <textarea id="rx-notes" placeholder="Enter clinical rationale or dosage changes..."></textarea>
+                    </div>
+                    <button class="btn btn-primary" onclick="alert('Prescription update successfully signed and pushed to pharmacy network!')">Sign & Issue Prescription</button>
+                </div>
+
+                <!-- Full Patient Medication Timeline (Full Width) -->
+                <div class="card full-width">
+                    <h3>📊 Historical Table of Tablets & Past Treatments</h3>
+                    <p>Complete historical registry of medications taken by the patient over past evaluations.</p>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Date Prescribed</th>
+                                <th>Medication & Strength</th>
+                                <th>Prescribing Doctor</th>
+                                <th>Clinical Indication</th>
+                                <th>Status / Outcome</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Jan 12, 2024</td>
+                                <td>Atorvastatin 20mg</td>
+                                <td>Dr. Ramesh</td>
+                                <td>Hyperlipidemia</td>
+                                <td><span class="tag tag-success">Completed Successfully</span></td>
+                            </tr>
+                            <tr>
+                                <td>Nov 05, 2023</td>
+                                <td>Glimepiride 2mg</td>
+                                <td>Dr. Priya Kumar</td>
+                                <td>Type 2 Diabetes</td>
+                                <td><span class="tag tag-warning">Replaced with Metformin</span></td>
+                            </tr>
+                            <tr>
+                                <td>Aug 19, 2023</td>
+                                <td>Pantoprazole 40mg</td>
+                                <td>Dr. Ramesh</td>
+                                <td>Gastric Protection</td>
+                                <td><span class="tag tag-success">Active / As Needed</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
 
@@ -481,11 +656,9 @@
     <!-- Client Script for Tab Management & Credential Validation -->
     <script>
         function switchTab(tabId) {
-            // Hide all sections
             document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
             document.querySelectorAll('.nav-links a').forEach(link => link.classList.remove('active'));
 
-            // Show selected section
             if (tabId === 'home') {
                 document.getElementById('section-home').classList.add('active');
                 document.getElementById('nav-home').classList.add('active');
@@ -499,16 +672,11 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        function focusPortal(type) {
-            // Smooth scroll or focus if needed
-        }
-
-        // 1. Patient Authentication Logic (Hides/Shows confidential details)
+        // 1. Patient Authentication Logic
         function loginPatient() {
             const phoneInput = document.getElementById('patient-phone').value.trim();
             const alertBox = document.getElementById('patient-alert');
             
-            // Demo credential check: 9486508579
             if (phoneInput === "9486508579") {
                 alertBox.style.display = 'none';
                 document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
@@ -525,7 +693,6 @@
             const passInput = document.getElementById('caretaker-pass').value.trim();
             const alertBox = document.getElementById('caretaker-alert');
 
-            // Demo credentials: Name: Thanu Shree N, Password: demo123
             if (nameInput === "Thanu Shree N" && passInput === "demo123") {
                 alertBox.style.display = 'none';
                 document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
@@ -542,7 +709,6 @@
             const passInput = document.getElementById('doctor-pass').value.trim();
             const alertBox = document.getElementById('doctor-alert');
 
-            // Demo credentials: Email: dr.ramesh.demo@hospital.com, Password: demo123
             if (emailInput === "dr.ramesh.demo@hospital.com" && passInput === "demo123") {
                 alertBox.style.display = 'none';
                 document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
