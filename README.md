@@ -1,132 +1,247 @@
-# Continuum — AI Health Memory Platform
+# 🩺 Continuum (Gericure) — AI Health Memory Platform for Elderly Care
 
-A FastAPI + PostgreSQL backend for a longitudinal patient health record
-system, paired with a static frontend prototype ("Continuum — General
-Health Memory Platform"). This repo merges what were previously three
-separate, overlapping deliverables (a P0 backend handoff, a follow-up
-"missing files" fix package, and a standalone frontend HTML file) into
-one project with a normal folder layout.
+An **AI-orchestrated, longitudinal health memory system** for elderly patients — built to unify fragmented medical records, surface clinically relevant context at the point of care, and catch the risks that fall through the cracks in geriatric care: polypharmacy, cognitive decline, and functional deterioration.
 
-## Project structure
+🔗 **Live Demo:** [continnum-production.up.railway.app/frontend/index.html](https://continnum-production.up.railway.app/frontend/index.html)
+
+---
+
+## 🎯 The Problem
+
+Elderly patients typically see multiple doctors across multiple institutions, with no single source of truth for their history. Critical signals — a slow cognitive decline reported only by a caregiver, a new drug interacting badly with five others already prescribed, a consent that quietly expired — get lost between systems. **Continuum** exists to stitch that fragmented record back together and let AI agents watch for the things a rushed clinician doesn't have time to cross-reference.
+
+---
+
+## ✨ Key Features
+
+- **Unified longitudinal timeline** — every diagnosis, medication, procedure, lab, vital, and caregiver observation for a patient, merged chronologically with full traceability back to its source record
+- **AI-powered clinical context synthesis** — turns a flat list of clinical events into a narrative summary at the point of care, with functional-decline trend analysis and confidence scoring
+- **Real-time polypharmacy & dosing risk detection** — drug–drug interactions, drug–disease contraindications, geriatric/renal dosing checks, and duplicate-therapy detection against a curated interaction database, producing a 0–10 composite risk score
+- **Cognitive decline tracking** — a dedicated agent for dementia-stage-aware risk stratification from longitudinal and caregiver-reported signals
+- **Real-time alert engine + WebSocket streaming** — clinically significant findings are pushed live to connected dashboards instead of waiting for a manual chart review
+- **Privacy-first consent enforcement** — consent (and its expiry) is checked at the database layer *before* any record reaches an AI agent, so access can't be extended by prompting the model
+- **Caregiver observation layer** — structured capture of informal caregiver input (cognitive changes, mobility decline, medication adherence, falls, behavioral changes) that feeds directly into the AI agents
+- **HIPAA-aligned compliance layer** — PHI encryption, audit logging, and access-control enforcement
+- **JWT-based authentication** with role-based access control (clinician, caregiver, legal guardian, healthcare proxy)
+- **Observability** — Prometheus metrics for HTTP, database, and AI-agent execution performance, with a Docker Compose stack for Grafana/Kibana/Elasticsearch dashboards
+
+---
+
+## 🤖 AI Agent Architecture
+
+Rather than one monolithic model, Continuum runs a small **orchestrated team of specialist agents**, each owning one clinical concern:
+
+| Agent | File | Responsibility |
+|---|---|---|
+| **Orchestrator** | `app/ai_agents/orchestrator.py` | Coordinates the agents below and assembles the final clinical response |
+| **Consent Agent** | `app/ai_agents/consent_agent.py` | Enforces consent + expiry at the DB layer before any record reaches an AI agent |
+| **Context Synthesis Agent** | `app/ai_agents/context_synthesis_agent.py` | Builds a narrative clinical summary from the patient's longitudinal history (10-year default window, diagnosis–medication linking, lab trending) |
+| **Polypharmacy Risk Agent** | `app/ai_agents/polypharmacy_risk_agent.py` | Detects drug–drug/drug–disease risk, geriatric dosing issues, and duplicate therapy |
+| **Cognitive Decline Agent** | `app/ai_agents/cognitive_decline_agent.py` | Dementia-stage-aware risk stratification from clinical + caregiver signals |
+| **Alert Engine** | `app/ai_agents/alert_engine.py` | Generates and streams real-time clinical alerts over WebSocket |
+| **Records Adapter** | `app/ai_agents/records_adapter.py` | Converts raw DB rows into the flat record format the agents consume |
+
+---
+
+## 🏗️ Architecture
 
 ```
-continuum-health-memory/
-├── main.py                      FastAPI entry point
-├── seed_demo.py                 Idempotent demo-data seeding script (patient "Nagarajan")
-├── requirements.txt             Python dependencies
-├── .env.example                 Environment variable template (copy to .env)
-├── .gitignore
+Client (Web / Mobile / Third-party)
+            │
+   Authentication Layer (JWT / OAuth2 — app/routers/auth.py)
+            │
+   HIPAA Compliance & Security Layer (app/compliance/hipaa.py)
+   — PHI encryption · audit logging · access control
+            │
+   API Layer (FastAPI)
+   ┌─────────────────────────┬───────────────────────────┐
+   │ Patients API             │ Clinical API               │
+   │ (app/routers/patients.py)│ (app/routers/clinical.py)  │
+   │ — CRUD + timeline        │ — summary, alerts,         │
+   │                          │   recommendations,         │
+   │                          │   medication analysis      │
+   └─────────────────────────┴───────────────────────────┘
+            │                              │
+   WebSocket Streaming            AI Agent Orchestrator
+   (app/routers/websocket.py)     (app/ai_agents/*)
+            │                              │
+            └──────────────┬───────────────┘
+                            │
+   Monitoring (Prometheus metrics — app/monitoring/metrics.py)
+                            │
+   Data Layer: PostgreSQL · Redis (cache/sessions) · Elasticsearch (logs/audit)
+   Visualization: Grafana · Kibana · PgAdmin (via docker-compose.yml)
+```
+
+---
+
+## 📁 Repository Structure
+
+```
+continuum/
+├── main.py                       FastAPI entry point, app metadata, mounted routers
+├── seed_demo.py                  Idempotent demo-data seeding script
+├── requirements.txt              Python dependencies
+├── Dockerfile / docker-compose.yml   Full production stack (Postgres, Redis, Elasticsearch,
+│                                      Grafana, Kibana, PgAdmin, Prometheus)
+├── init.sql                      DB initialization script
 │
 ├── app/
-│   ├── __init__.py
-│   ├── database.py               SQLAlchemy engine/session (PostgreSQL, DATABASE_URL-driven)
-│   ├── models.py                 SQLAlchemy models: Patient, Doctor, MedicalRecord,
-│   │                              Medicine, CaregiverObservation, Consent
-│   ├── schemas.py                Pydantic request/response schemas, incl. Timeline schemas
+│   ├── database.py                SQLAlchemy engine/session (DATABASE_URL-driven)
+│   ├── models.py                  Patient, Doctor, MedicalRecord, Medicine,
+│   │                               CaregiverObservation, Consent
+│   ├── schemas.py                 Pydantic request/response schemas
 │   │
 │   ├── routers/
-│   │   ├── __init__.py
-│   │   └── patients.py           Patient CRUD + GET /api/patients/{id}/timeline
+│   │   ├── patients.py            Patient CRUD + GET /api/patients/{id}/timeline
+│   │   ├── clinical.py            AI-powered summaries, alerts, recommendations,
+│   │   │                          medication analysis, clinical context
+│   │   ├── auth.py                JWT auth: register, login, refresh, roles, logout
+│   │   └── websocket.py           Real-time alert streaming + alert history/ack/resolve
 │   │
-│   └── ai_agents/
-│       ├── __init__.py
-│       ├── consent_agent.py      Consent + expiry enforcement (DB-layer, not prompt-bypassable)
-│       └── records_adapter.py    Converts DB rows into the flat record format the AI agents use
+│   ├── ai_agents/                 See "AI Agent Architecture" above
+│   │
+│   ├── compliance/
+│   │   └── hipaa.py               PHI encryption, audit trail, access control
+│   │
+│   └── monitoring/
+│       └── metrics.py             Prometheus metrics for requests, DB, and agents
 │
 ├── frontend/
-│   └── index.html                 Self-contained static UI prototype (Tailwind via CDN, no build step)
+│   ├── index.html                 Main dashboard UI (Tailwind via CDN, no build step)
+│   └── consent-dashboard.html     Guardian/consent management UI
 │
-└── docs/
-    ├── PROJECT_AUDIT.md           Original architecture/dependency audit
-    ├── INSTALLATION_STEPS.md      Detailed step-by-step setup walkthrough
-    ├── P0_CHANGES_MANIFEST.md     What changed in the P0 handoff and why
-    └── IMPLEMENTATION_CHECKLIST.txt
+├── monitoring/
+│   ├── prometheus.yml             Prometheus scrape config
+│   └── logstash.conf              Log pipeline config
+│
+├── tests/
+│   └── test_comprehensive.py      Test suite (pytest)
+│
+└── docs/                          Design audits, phase completion reports, API reference,
+                                    installation walkthrough
 ```
 
-## What was merged
+> **Note:** `app/routers/auth.py` exists in the codebase but is not currently wired into `main.py`'s `include_router()` calls — only `patients`, `clinical`, and `websocket` are mounted. Registering the auth router is a straightforward next step for anyone picking this up.
 
-This project previously existed as three disconnected pieces:
+---
 
-1. **`AI_Health_Memory_P0_Handoff`** — the real application logic:
-   `models.py`, `schemas.py`, `routers/patients.py`, the two `ai_agents/`
-   modules, and `seed_demo.py`.
-2. **`FINAL_PROJECT_FIX`** — the infrastructure the app needs to actually
-   run: `main.py`, `app/database.py`, the three `__init__.py` package
-   markers, `requirements.txt`, and `.env.example`, plus a stack of audit
-   docs.
-3. **`index.html`** — a large, self-contained static frontend prototype
-   (Tailwind CDN, vanilla JS, mock in-page data) that was never wired to
-   the backend above.
+## 🚀 Getting Started
 
-Everything has been placed into one conventional Python package layout,
-verified to import cleanly, and confirmed to expose the expected routes
-(`/`, `/health`, `/api/patients/`, `/api/patients/{id}`,
-`/api/patients/{id}/timeline`).
-
-**Note on the frontend:** `frontend/index.html` is a UI prototype with
-its own mock JavaScript data — it does not currently call the FastAPI
-backend (no `fetch()` calls to `/api/...`). Wiring it up to the live API
-is the natural next step and isn't done here, since it would mean writing
-new integration code rather than reorganizing what already exists.
-
-## Quick start
+### Option 1 — Full stack with Docker Compose (recommended)
 
 ```bash
-# 1. Install dependencies
+git clone https://github.com/<your-org>/continuum.git
+cd continuum
+docker-compose up -d
+```
+
+This brings up the app alongside PostgreSQL, Redis, Elasticsearch, Prometheus, Grafana, Kibana, and PgAdmin.
+
+| Service | URL |
+|---|---|
+| API | http://localhost:8000 |
+| Swagger docs | http://localhost:8000/docs |
+| Frontend dashboard | http://localhost:8000/frontend/index.html |
+| Prometheus | http://localhost:9090 |
+| Grafana | http://localhost:3000 (admin/admin) |
+| Kibana | http://localhost:5601 |
+| PgAdmin | http://localhost:5050 |
+
+### Option 2 — Run locally with Python
+
+```bash
 python -m venv venv
 source venv/bin/activate        # venv\Scripts\activate on Windows
 pip install -r requirements.txt
 
-# 2. Configure environment
-cp .env.example .env
-# edit .env with your PostgreSQL credentials (or see "Run without PostgreSQL" below)
-
-# 3. Run the API
+cp .env.example .env            # configure DATABASE_URL and secrets
 python main.py                  # or: uvicorn main:app --reload
 
-# 4. In another terminal, seed demo data
-python seed_demo.py
-
-# 5. Try it
-curl http://localhost:8000/api/patients/1/timeline
-open http://localhost:8000/docs     # Swagger UI
+python seed_demo.py             # seed demo patient data
 ```
 
-### Run without PostgreSQL (quick local testing)
-
-`app/database.py` reads `DATABASE_URL` from the environment. For a
-zero-setup smoke test you can point it at SQLite instead:
+**Quick local testing without PostgreSQL** — `app/database.py` reads `DATABASE_URL` from the environment, so you can point it at SQLite instead:
 
 ```bash
 export DATABASE_URL="sqlite:///./dev.db"
 python main.py
 ```
 
-### View the frontend prototype
-
-`frontend/index.html` has no dependencies beyond a browser and internet
-access (it pulls Tailwind and Google Fonts from CDNs). Just open it
-directly:
-
+Then visit:
 ```bash
-open frontend/index.html            # macOS
-# or: python -m http.server 5500 --directory frontend
+curl http://localhost:8000/api/patients/1/timeline
+open http://localhost:8000/docs
+open http://localhost:8000/frontend/index.html
 ```
 
-## Key features
+### Running tests
 
-- **Longitudinal timeline** — `GET /api/patients/{id}/timeline` returns
-  every medication, diagnosis, procedure, lab, vitals reading, and
-  caregiver observation for a patient, chronologically sorted, each
-  tagged with a `record_id` for traceability back to its source row.
-- **Consent enforcement with expiry** — `consent_agent.py` checks
-  `Consent.expiry_date` against the current date *before* any record is
-  handed to an AI layer, so access can't be extended by prompting.
-- **Medication change tracking** — `Medicine.change_note` records things
-  like "dosage increased from 500mg to 750mg" and surfaces in both the
-  timeline and the AI-facing record adapter.
+```bash
+pytest tests/ -v --cov=app
+```
 
-## Further reading
+---
 
-See `docs/` for the original audit and setup documentation carried over
-from the source packages.
+## 📡 API Overview
+
+| Area | Endpoint | Method | Purpose |
+|---|---|---|---|
+| Patients | `/api/patients/` | GET/POST | List / create patients |
+| Patients | `/api/patients/{id}` | GET | Patient details |
+| Patients | `/api/patients/{id}/timeline` | GET | Full longitudinal record timeline |
+| Clinical | `/api/clinical/patients/{id}/summary` | POST | AI-synthesized clinical summary |
+| Clinical | `/api/clinical/patients/{id}/alerts` | GET | Active clinical alerts |
+| Clinical | `/api/clinical/patients/{id}/recommendations` | GET | AI recommendations |
+| Clinical | `/api/clinical/patients/{id}/analyze-medications` | POST | Polypharmacy / dosing risk analysis |
+| Clinical | `/api/clinical/patients/{id}/clinical-context` | GET | Raw synthesized clinical context |
+| Auth | `/auth/register`, `/auth/login`, `/auth/refresh`, `/auth/me`, `/auth/logout` | — | JWT auth (see note above re: wiring) |
+| Alerts | `/api/alerts/patients/{id}/history` | GET | Historical alert log |
+| Alerts | `/api/alerts/patients/{id}/acknowledge/{alert_id}` | POST | Acknowledge an alert |
+| Alerts | `/api/alerts/patients/{id}/resolve/{alert_id}` | POST | Resolve an alert |
+| System | `/api/status`, `/health`, `/api/system/capabilities` | GET | Service health & capabilities |
+
+Full request/response examples are in [`docs/CLINICAL_API_REFERENCE.md`](docs/CLINICAL_API_REFERENCE.md).
+
+---
+
+## 🔐 Security & Compliance
+
+- **JWT/OAuth2 authentication** with role-based access control and refresh tokens
+- **Consent enforcement at the data layer** — expiry checked before records reach any AI agent, so a prompt can't extend access
+- **PHI encryption** (Fernet) and **audit trail logging** via `app/compliance/hipaa.py`
+- **Tiered consent models** — patient self, legal guardian, healthcare proxy, HIPAA-covered clinician
+
+---
+
+## 🛣️ Roadmap
+
+- Wire `frontend/index.html` to live API calls (currently a UI prototype with mock in-page data)
+- Mount `auth.py` into `main.py` and enforce auth across the clinical/patients routers
+- Guardian consent UI workflows
+- Additional AI agents for broader risk stratification
+
+See `docs/PHASE2_COMPLETION.md` and `docs/PHASE3_COMPLETION.md` for a full history of what's shipped, and `docs/PROJECT_AUDIT.md` for the original architecture audit.
+
+---
+
+## 👥 Team
+
+| Member | GitHub |
+|---|---|
+| Team Leader | [Samdcruzzz](https://github.com/Samdcruzzz) |
+| Team Member | [ThanuShree99](https://github.com/ThanuShree99) |
+| Team Member | [sudhamanikandan206](https://github.com/sudhamanikandan206) |
+| Team Member | [Shakthipriya0305](https://github.com/Shakthipriya0305) |
+
+---
+
+## 🔗 Links
+
+- **Live Demo:** [continnum-production.up.railway.app/frontend/index.html](https://continnum-production.up.railway.app/frontend/index.html)
+- **API Docs (Swagger):** `/docs` on the deployed instance
+- **Full documentation:** see the [`docs/`](docs) folder
+
+---
+
+*Continuum exists so that no elderly patient's history — or the caregiver who noticed something was wrong first — gets lost between appointments.*
